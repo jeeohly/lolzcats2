@@ -33,5 +33,6 @@ foreach($followingposts as $post){
     echo "<span>".$post['likes']." likes</span>
     </form>
     <hr /></br />";
+    //test
 }
 ?>
