@@ -2,6 +2,7 @@
 include('./classes/DB.php');
 include('./classes/login2.php');
 include('./classes/post2.php');
+include('./classes/Comment.php');
 
 $showTimeline = False;
 if(login2::isLoggedIn()){
@@ -14,12 +15,16 @@ if(login2::isLoggedIn()){
 if(isset($_GET['postid'])){
 	post2::likePost($_GET['postid'], $userid);
 }
-
+////comments/////
+if(isset($_POST['comment'])){
+	Comment::createComment($_POST['commentbody'], $_GET['postid'], $userid);
+}
+////////////
 $followingposts = DB::query('SELECT posts.id, posts.body, posts.likes, users.`username` FROM users, posts, followers
 WHERE posts.user_id = followers.user_id
 AND users.id = posts.user_id
-AND follower_id = 13
-ORDER BY posts.likes DESC;');
+AND follower_id = :userid
+ORDER BY posts.likes DESC;', array(':userid'=>$userid));
 
 foreach($followingposts as $post){
 	echo $post['body']." ~ ".$post['username'];
@@ -32,7 +37,10 @@ foreach($followingposts as $post){
     }
     echo "<span>".$post['likes']." likes</span>
     </form>
+    <form action='index.php?postid=".$post['id']."' method='post'>
+    <textarea name='commentbody' rows='3' cols='50'></textarea>
+    <input type='submit' name='comment' value='Comment'>
+    </form>
     <hr /></br />";
-    //test
 }
 ?>

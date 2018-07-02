@@ -1,0 +1,5 @@
+Client ID:
+882aecd3eb41388
+
+Client secret:
+1d108b4843dcbdf9f7871e085e55eb99727e4036
