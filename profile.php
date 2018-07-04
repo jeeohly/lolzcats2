@@ -2,6 +2,7 @@
 include('./classes/DB.php');
 include('./classes/login2.php');
 include('./classes/post2.php');
+include('./classes/Image.php');
 
 $username = "";
 $isFollowing = False;
@@ -55,7 +56,12 @@ if(isset($_GET['username'])){
 
 		//////////posting///////////////
 		if(isset($_POST['post'])){
-			post2::createPost($_POST['postbody'], login2::isLoggedIn(), $userid);
+			if($_FILES['postimg']['size'] == 0){
+				post2::createPost($_POST['postbody'], login2::isLoggedIn(), $userid);
+			}else{
+				$postid = post2::createImgPost($_POST['postbody'], login2::isLoggedIn(), $userid);
+				Image::uploadImage('postimg', "UPDATE posts SET postimg=:postimg WHERE id=:postid", array(':postid'=>$postid));
+			}
 		}
 		///////////////likes//////////
 		if(isset($_GET['postid'])){
@@ -82,8 +88,11 @@ if(isset($_GET['username'])){
 	}
 	?>
 </form>
-<form action="profile.php?username=<?php echo $username; ?>" method="post">
+
+<form action="profile.php?username=<?php echo $username; ?>" method="post" enctype="multipart/form-data">
 	<textarea name="postbody" rows="8" cols="80"></textarea>
+	<br />Upload an image:
+	<input type="file" name="postimg">
 	<input type="submit" name="post" value="post">
 </form>
 

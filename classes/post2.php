@@ -8,10 +8,25 @@ class post2{
 			}
 
 			if($loggedInUserId == $profileUserId){
-				DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0)', array(':postbody'=>$postbody, ':userid'=>$profileUserId));
+				DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0, \'\')', array(':postbody'=>$postbody, ':userid'=>$profileUserId));
 			}else{
 				die('Incorrect user');
 			}
+	}
+
+	public static function createImgPost($postbody, $loggedInUserId, $profileUserId){
+
+		if(strlen($postbody) > 160){
+			die('Incorrect length');
+		}
+
+		if($loggedInUserId == $profileUserId){
+			DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0, \'\')', array(':postbody'=>$postbody, ':userid'=>$profileUserId));
+			$postid = DB::query('SELECT id FROM posts WHERE user_id=:userid ORDER BY ID DESC LIMIT 1;', array(':userid'=>$loggedInUserId))[0]['id'];
+			return $postid;
+		}else{
+			die('Incorrect user');
+		}
 	}
 
 	public static function likePost($postid, $likerId){
@@ -24,6 +39,22 @@ class post2{
 		}
 	}
 
+	public static function link_add($text){
+
+		$text = explode(" ", $text);
+		$newstring = "";
+
+		foreach ($text as $word) {
+			if(substr($word, 0, 1) == "@"){
+				$newstring .= "<a href='profile.php?username=".substr($word, 1)."'>".htmlspecialchars($word)." </a>";
+			}else{
+				$newstring .= htmlspecialchars($word)." ";
+			}
+		}
+
+		return $newstring;
+	}
+
 	public static function displayPosts($userid, $username, $loggedInUserId){
 		$dbposts = DB::query('SELECT * FROM posts WHERE user_id=:userid ORDER BY id DESC', array(':userid'=>$userid));
 		$posts = "";
@@ -31,14 +62,14 @@ class post2{
 
 			if(!DB::query('SELECT post_id FROM post_likes WHERE post_id=:postid AND user_id=:userid', array(':postid'=>$p['id'], ':userid'=>$loggedInUserId))){
 
-				$posts .= htmlspecialchars($p['body'])."
+				$posts .= "<img src='".$p['postimg']."'>".self::link_add($p['body'])."
 				<form action='profile.php?username=$username&postid=".$p['id']."' method='post'>
 					<input type='submit' name='like' value='like'>
 					<span>".$p['likes']." likes</span>
 				</form>
 				<hr /></br />";
 			}else{
-				$posts .= htmlspecialchars($p['body'])."
+				$posts .= "<img src='".$p['postimg']."'>".self::link_add($p['body'])."
 				<form action='profile.php?username=$username&postid=".$p['id']."' method='post'>
 					<input type='submit' name='unlike' value='unlike'>
 					<span>".$p['likes']." likes</span>

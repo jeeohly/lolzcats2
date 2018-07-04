@@ -3,3 +3,12 @@ Client ID:
 
 Client secret:
 1d108b4843dcbdf9f7871e085e55eb99727e4036
+
+link: https://api.imgur.com/oauth2/authorize?client_id=882aecd3eb41388&response_type=token
+
+link2: https://imgur.com/#access_token=1d96f37d7cd0a2175585ece9cfc4b753f25a8256&expires_in=315360000&token_type=bearer&refresh_token=9ae98876fdcd1f0fe51b28e42c6789f15a7d744d&account_username=giolee8&account_id=90108609
+
+access token: 1d96f37d7cd0a2175585ece9cfc4b753f25a8256
+
+refresh token: 9ae98876fdcd1f0fe51b28e42c6789f15a7d744d
+
