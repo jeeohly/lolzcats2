@@ -10,6 +10,19 @@ class post2{
 			$topics = self::getTopics($postbody);
 
 			if($loggedInUserId == $profileUserId){
+
+				if(count(self::notify($postbody)) != 0){
+					foreach(self::notify($postbody) as $key => $n){
+
+						$s = $loggedInUserId; 
+						$r = DB::query('SELECT id FROM users WHERE username=:username', array(':username'=>$key))[0]['id'];
+
+						if($r != 0){
+							DB::query('INSERT INTO notifications VALUES (\'\', :type, :receiver, :sender, :extra)', array(':type'=>$n["type"], ':receiver'=>$r, ':sender'=>$s, ':extra'=>$n["extra"]));
+						}
+					}
+				}
+
 				DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0, \'\', :topics)', array(':postbody'=>$postbody, ':userid'=>$profileUserId, ':topics'=>$topics));
 			}else{
 				die('Incorrect user');
@@ -23,6 +36,18 @@ class post2{
 		}
 
 		$topics = self::getTopics($postbody);
+
+		if(count(self::notify($postbody)) != 0){
+			foreach(self::notify($postbody) as $key => $n){
+
+				$s = $loggedInUserId; 
+				$r = DB::query('SELECT id FROM users WHERE username=:username', array(':username'=>$key))[0]['id'];
+
+				if($r != 0){
+					DB::query('INSERT INTO notifications VALUES (\'\', :type, :receiver, :sender, :extra)', array(':type'=>$n["type"], ':receiver'=>$r, ':sender'=>$s, ':extra'=>$n["extra"]));
+				}
+			}
+		}
 
 		if($loggedInUserId == $profileUserId){
 			DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0, \'\', \'\')', array(':postbody'=>$postbody, ':userid'=>$profileUserId, ':topics'=>$topics));
@@ -45,7 +70,6 @@ class post2{
 
 	public static function getTopics($text){
 		$text = explode(" ", $text);
-
 		$topics = "";
 
 		foreach ($text as $word) {
@@ -58,23 +82,31 @@ class post2{
 		return $topics;
 	}
 
+	public static function notify($text){
+		$text = explode(" ", $text);
+        $notify = array();
+        foreach ($text as $word) {
+            if (substr($word, 0, 1) == "@") {
+                $notify[substr($word, 1)] = array("type"=>1, "extra"=>' { "postbody": "'.htmlentities(implode($text, " ")).'" } ');
+            }
+        }
+        return $notify;
+	}
+
 	public static function link_add($text){
 
 		$text = explode(" ", $text);
-		$newstring = "";
-
-		foreach ($text as $word) {
-			if(substr($word, 0, 1) == "@"){
-				$newstring .= "<a href='profile.php?username=".substr($word, 1)."'>".htmlspecialchars($word)." </a>";
-			}else if(substr($word, 0, 1) == "#"){
-				$newstring .= "<a href='topics.php?topic=".substr($word, 1)."'>".htmlspecialchars($word)." </a>";
-			}else{
-				$newstring .= htmlspecialchars($word)." ";
-			}
-
-		}
-
-		return $newstring;
+        $newstring = "";
+        foreach ($text as $word) {
+            if (substr($word, 0, 1) == "@") {
+                $newstring .= "<a href='profile.php?username=".substr($word, 1)."'>".htmlspecialchars($word)."</a> ";
+            } else if (substr($word, 0, 1) == "#") {
+                $newstring .= "<a href='topics.php?topic=".substr($word, 1)."'>".htmlspecialchars($word)."</a> ";
+            } else {
+                $newstring .= htmlspecialchars($word)." ";
+            }
+        }
+        return $newstring;
 	}
 
 
@@ -90,7 +122,7 @@ class post2{
 					<input type='submit' name='like' value='like'>
 					<span>".$p['likes']." likes</span>";
 				if($userid == $loggedInUserId){
-					$posts .= "<input type='submit' name='deletepost', value='x' />";
+					$posts .= "&nbsp;<input type='submit' name='deletepost', value='x' />";
 				}
 				$posts .= "
 				</form><hr /></br />";
@@ -100,7 +132,7 @@ class post2{
 					<input type='submit' name='unlike' value='unlike'>
 					<span>".$p['likes']." likes</span>";
 				if($userid == $loggedInUserId){
-					$posts .= "<input type='submit' name='deletepost', value='x' />";
+					$posts .= "&nbsp;<input type='submit' name='deletepost', value='x' />";
 				}
 				$posts .= "
 				</form><hr /></br />";
