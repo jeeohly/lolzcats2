@@ -53,6 +53,14 @@ if(isset($_GET['username'])){
 			//echo 'Already following';
 			$isFollowing = True;
 		}
+		//////////deleting posts
+		if(isset($_POST['deletepost'])){
+			if (DB::query('SELECT id FROM posts WHERE id=:postid AND user_id=:userid', array(':postid'=>$_GET['postid'], ':userid'=>$followerid))) {
+                DB::query('DELETE FROM posts WHERE id=:postid and user_id=:userid', array(':postid'=>$_GET['postid'], ':userid'=>$followerid));
+                DB::query('DELETE FROM post_likes WHERE post_id=:postid', array(':postid'=>$_GET['postid']));
+                echo 'Post deleted';
+            }
+		}
 
 		//////////posting///////////////
 		if(isset($_POST['post'])){
@@ -64,7 +72,7 @@ if(isset($_GET['username'])){
 			}
 		}
 		///////////////likes//////////
-		if(isset($_GET['postid'])){
+		if(isset($_GET['postid']) && !isset($_POST['deletepost'])){
 			post2::likePost($_GET['postid'], $followerid);
 		}
 
