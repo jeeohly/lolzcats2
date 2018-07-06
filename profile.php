@@ -3,6 +3,7 @@ include('./classes/DB.php');
 include('./classes/login2.php');
 include('./classes/post2.php');
 include('./classes/Image.php');
+include('./classes/Notify.php');
 
 $username = "";
 $isFollowing = False;
@@ -68,7 +69,7 @@ if(isset($_GET['username'])){
 				post2::createPost($_POST['postbody'], login2::isLoggedIn(), $userid);
 			}else{
 				$postid = post2::createImgPost($_POST['postbody'], login2::isLoggedIn(), $userid);
-				Image::uploadImage('postimg', "UPDATE posts SET postimg=:postimg WHERE id=:postid", array(':postid'=>$postid));
+                Image::uploadImage('postimg', "UPDATE posts SET postimg=:postimg WHERE id=:postid", array(':postid'=>$postid));
 			}
 		}
 		///////////////likes//////////
