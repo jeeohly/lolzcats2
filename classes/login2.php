@@ -6,7 +6,7 @@ class login2{
 				$userid = DB::query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($_COOKIE['LOLID'])))[0]['user_id'];
 
 				if(isset($_COOKIE['LOLID_'])){
-				return $userid;
+					return $userid;
 				}else{
 					$cstrong = True;
                 	$token = bin2hex(openssl_random_pseudo_bytes(64, $cstrong));
