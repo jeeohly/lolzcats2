@@ -1,84 +1,104 @@
 <?php
-include('./classes/DB.php');
-include('./classes/login2.php');
-include('./classes/post2.php');
-include('./classes/Comment.php');
+require_once("DB.php");
+require_once("Mail.php");
 
-$showTimeline = False;
-if(login2::isLoggedIn()){
-	$userid = login2::isLoggedIn();
-	$showTimeline = True;
-}else{
-	echo 'Not logged in';
-}
-
-if(isset($_GET['postid'])){
-	post2::likePost($_GET['postid'], $userid);
-}
-////comments/////
-if(isset($_POST['comment'])){
-	Comment::createComment($_POST['commentbody'], $_GET['postid'], $userid);
-}
-///////searchbox
-if(isset($_POST['search'])){
-	$tosearch = explode(" ", $_POST['searchbox']);
-	if(count($tosearch) == 1){
-		$tosearch = str_split($tosearch[0], 2);
-	}
-	$whereclause = "";
-	$paramsarray = array(':username'=>'%'.$_POST['searchbox'].'%');
-	for($i = 0; $i < count($tosearch); $i++){
-		$whereclause .= " OR username LIKE :u$i ";
-		$paramsarray[":u$i"] = $tosearch[$i];
-	}
-
-	$whereclause = "";
-    $paramsarray = array(':body'=>'%'.$_POST['searchbox'].'%');
-    for ($i = 0; $i < count($tosearch); $i++) {
-        if ($i % 2) {
-            $whereclause .= " OR body LIKE :p$i ";
-            $paramsarray[":p$i"] = $tosearch[$i];
+$db = new DB("127.0.0.1", "lolzcatz", "root", "");
+if ($_SERVER['REQUEST_METHOD'] == "GET") {
+        if ($_GET['url'] == "auth") {
+        } else if ($_GET['url'] == "users") {
         }
-    }
-    $posts = DB::query('SELECT posts.body FROM posts WHERE posts.body LIKE :body '.$whereclause.'', $paramsarray);
-    echo '<pre>';
-    print_r($posts);
-    echo '</pre>';
-}
-////////////////////////////////////
-?>
+} else if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-<form action="index.php" method="post">
-	<input type="text" name="searchbox" value="">
-	<input type="submit" name="search" value="Search">
-</form>
+        if ($_GET['url'] == "users") {
+                $postBody = file_get_contents("php://input");
+                $postBody = json_decode($postBody);
 
-<?php
-////////////
-$followingposts = DB::query('SELECT posts.id, posts.body, posts.likes, users.`username` FROM users, posts, followers
-WHERE posts.user_id = followers.user_id
-AND users.id = posts.user_id
-AND follower_id = :userid
-ORDER BY posts.likes DESC;', array(':userid'=>$userid));
+                $username = $postBody->username;
+                $email = $postBody->email;
+                $password = $postBody->password;
 
-foreach($followingposts as $post){
-	echo $post['body']." ~ ".$post['username'];
-    echo "<form action='index.php?postid=".$post['id']."' method='post'>";
-    
-    if (!DB::query('SELECT post_id FROM post_likes WHERE post_id=:postid AND user_id=:userid', array(':postid'=>$post['id'], ':userid'=>$userid))) {
-        echo "<input type='submit' name='like' value='Like'>";
-    }else{
-        echo "<input type='submit' name='unlike' value='Unlike'>";
-    }
-    echo "<span>".$post['likes']." likes</span>
-    </form>
-    <form action='index.php?postid=".$post['id']."' method='post'>
-    <textarea name='commentbody' rows='3' cols='50'></textarea>
-    <input type='submit' name='comment' value='Comment'>
-    </form>
-    ";
-    Comment::displayComments($post['id']);
-    echo "
-    <hr /></br />";
+                if(!$db->query('SELECT username from users WHERE username=:username', array(':username'=>$username))){
+
+                        if(strlen($username) >= 3 && strlen($username) <= 32){
+                                if(preg_match('/[a-zA-z0-9_]+/', $username)){
+                                        if(strlen($password) >= 6 && strlen($password) <= 60){
+                                                if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+
+                                                        if(!$db->query('SELECT email FROM users WHERE email=:email', array(':email'=>$email))){
+                                                                $db->query('INSERT INTO users VALUES(\'\', :username, :password, :email, \'0\', \'\')', array(':username'=>$username, ':password'=>password_hash($password, PASSWORD_BCRYPT), ':email'=>$email));
+                                                                echo '{ "Success": "User Created" }';
+                                                                http_response_code(200);
+                                                                ///email
+                                                                Mail::sendMail('Welcome to LOLZCATZ U WONT REGRET IT', 'Your account has been created homeslice', $email);
+
+                                                        }else{
+                                                                echo '{ "Error": "Email in use" }';
+                                                                http_response_code(409);
+
+                                                        }
+                                                }else{
+                                                        echo '{ "Error": "Invalid email" }';
+                                                        http_response_code(409);
+
+                                                }
+                                        }else{
+                                                echo '{ "Error": "Invalid password" }';
+                                                http_response_code(409);
+
+                                        }
+                                }else{
+                                        echo '{ "Error": "Invalid username" }';
+                                        http_response_code(409);
+                                }
+                        }else{
+                                echo '{ "Error": "Invalid username" }';
+                                http_response_code(409);
+                        }
+                }else{
+                        echo '{ "Error": "User exists" }';
+                        http_response_code(409);
+                }        
+        }
+
+
+        if ($_GET['url'] == "auth") {
+                $postBody = file_get_contents("php://input");
+                $postBody = json_decode($postBody);
+                $username = $postBody->username;
+                $password = $postBody->password;
+                if ($db->query('SELECT username FROM users WHERE username=:username', array(':username'=>$username))) {
+                        if (password_verify($password, $db->query('SELECT password FROM users WHERE username=:username', array(':username'=>$username))[0]['password'])) {
+                                $cstrong = True;
+                                $token = bin2hex(openssl_random_pseudo_bytes(64, $cstrong));
+                                $user_id = $db->query('SELECT id FROM users WHERE username=:username', array(':username'=>$username))[0]['id'];
+                                $db->query('INSERT INTO login_tokens VALUES (\'\', :token, :user_id)', array(':token'=>sha1($token), ':user_id'=>$user_id));
+                                echo '{ "Token": "'.$token.'" }';
+                        } else {
+                                echo '{ "Error": "Invalid username or password!" }';
+                                http_response_code(401);
+                        }
+                } else {
+                        echo '{ "Error": "Invalid username or password!" }';
+                        http_response_code(401);
+                }
+        }
+}  else if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
+        if ($_GET['url'] == "auth") {
+                if (isset($_GET['token'])) {
+                        if ($db->query("SELECT token FROM login_tokens WHERE token=:token", array(':token'=>sha1($_GET['token'])))) {
+                                $db->query('DELETE FROM login_tokens WHERE token=:token', array(':token'=>sha1($_GET['token'])));
+                                echo '{ "Status": "Success" }';
+                                http_response_code(200);
+                        } else {
+                                echo '{ "Error": "Invalid token" }';
+                                http_response_code(400);
+                        }
+                } else {
+                        echo '{ "Error": "Malformed request" }';
+                        http_response_code(400);
+                }
+        }
+} else {
+        http_response_code(405);
 }
 ?>
