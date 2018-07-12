@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lolzcatz</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="assets/css/Login-Form-Dark.css">
+    <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
+    <link rel="stylesheet" href="assets/css/Navigation-with-Search.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-search">
+        <div class="container"><a class="navbar-brand" href="#"><img src="assets/img/36863996_1896474417051164_5099403052654264320_n.png" style="width:50px;height:50px;">Lolzcatz</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div
+                class="collapse navbar-collapse" id="navcol-1">
+                <form class="form-inline mr-auto" target="_self">
+                    <div class="form-group"><label for="search-field"><i class="fa fa-search"></i></label><input class="form-control search-field" type="search" name="search" id="search-field" style="width:200px;"></div>
+                </form>
+                <ul class="nav navbar-nav">
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="#">Timeline</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Messages</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Notifications</a></li>
+                    <li class="dropdown"><a class="dropdown-toggle nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">User</a>
+                        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">First Item</a><a class="dropdown-item" role="presentation" href="#">Second Item</a><a class="dropdown-item" role="presentation" href="#">Third Item</a></div>
+                    </li>
+                </ul>
+        </div>
+        </div>
+    </nav>
+    <h2 class="text-left">&nbsp; &nbsp;Timeline</h2>
+    <div></div>
+
+    <div class="timelineposts">
+        <!--<blockquote class="blockquote" style="margin:30px;">
+            <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+            <footer class="blockquote-footer">Someone famous &nbsp;&nbsp;<button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);">Like</button><button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);margin:5px;">Comment</button>&nbsp;
+                &nbsp;</footer>
+        </blockquote>-->
+        
+    </div>
+
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-animation.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.ajax({
+                type: "GET",
+                url: "api/posts",
+                processData: false,
+                contentType: "application/json",
+                data: '',
+                success: function(r) {
+                    var posts = JSON.parse(r)
+                    $.each(posts, function(index){
+                        $('.timelineposts').html(
+                            $('.timelineposts').html() + '<blockquote class="blockquote" style="margin:30px;"><p class="mb-0">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);">Like</button><button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
+
+                        )
+                    })
+                },
+                error: function(r) {
+                    console.log(r)
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
