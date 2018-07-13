@@ -3,6 +3,7 @@ include('./classes/DB.php');
 include('./classes/login2.php');
 include('./classes/post2.php');
 include('./classes/Comment.php');
+include('./classes/Notify.php');
 
 $showTimeline = False;
 if(login2::isLoggedIn()){

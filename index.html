@@ -17,7 +17,7 @@
 
 <body>
     <nav class="navbar navbar-light navbar-expand-md navigation-clean-search">
-        <div class="container"><a class="navbar-brand" href="#"><img src="assets/img/36863996_1896474417051164_5099403052654264320_n.png" style="width:50px;height:50px;">Lolzcatz</a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container"><a class="navbar-brand" href="#"><img src="assets/img/lolzcatz logo 2.png" style="width:200px;"></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div
                 class="collapse navbar-collapse" id="navcol-1">
                 <form class="form-inline mr-auto" target="_self">
@@ -36,20 +36,16 @@
     </nav>
     <h2 class="text-left">&nbsp; &nbsp;Timeline</h2>
     <div></div>
-
     <div class="timelineposts">
         <!--<blockquote class="blockquote" style="margin:30px;">
             <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-            <footer class="blockquote-footer">Someone famous &nbsp;&nbsp;<button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);">Like</button><button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);margin:5px;">Comment</button>&nbsp;
+            <footer class="blockquote-footer">Someone famous, date &nbsp;&nbsp;<button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);">0 Likes</button><button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);margin:5px;">Comment</button>&nbsp;
                 &nbsp;</footer>
         </blockquote>-->
-        
     </div>
-
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-animation.js"></script>
-
     <script type="text/javascript">
         $(document).ready(function() {
             $.ajax({
@@ -62,8 +58,7 @@
                     var posts = JSON.parse(r)
                     $.each(posts, function(index){
                         $('.timelineposts').html(
-                            $('.timelineposts').html() + '<blockquote class="blockquote" style="margin:30px;"><p class="mb-0">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);">Like</button><button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
-
+                            $('.timelineposts').html() + '<blockquote class="blockquote" style="margin:30px;"><p class="mb-0">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
                         )
                     })
                 },

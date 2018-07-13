@@ -35,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $response = substr($response, 0, strlen($response)-1);
                 $response .= "]";
                 
+                http_response_code(200);
                 echo $response;
              
         }
