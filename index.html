@@ -58,8 +58,27 @@
                     var posts = JSON.parse(r)
                     $.each(posts, function(index){
                         $('.timelineposts').html(
-                            $('.timelineposts').html() + '<blockquote class="blockquote" style="margin:30px;"><p class="mb-0">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
+                            $('.timelineposts').html() + '<blockquote class="blockquote" style="margin:30px;"><p class="mb-0">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(64,86,161);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
                         )
+
+                        $('[data-id]').click(function(){
+                            var buttonid = $(this).attr('data-id');
+                            $.ajax({
+                                type: "POST",
+                                url: "api/likes?id=" + $(this).attr('data-id'),
+                                processData: false,
+                                contentType: "application/json",
+                                data: '',
+                                success: function(r){
+                                    var res = JSON.parse(r)
+                                    $("[data-id='"+buttonid+"']").html(''+res.Likes+' Likes</button>');
+                                    console.log(r);
+                                },
+                                error: function(r){
+                                    console.log(r);
+                                }
+                            });
+                        })
                     })
                 },
                 error: function(r) {
