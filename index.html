@@ -43,6 +43,20 @@
                 &nbsp;</footer>
         </blockquote>-->
     </div>
+    <!-----MODAL-------->
+    <div class="modal fade" role="dialog" tabindex="-1" style="padding-top:100px;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Comments</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                <div class="modal-body" style="max-height: 400px; overflow-y: auto">
+                    <p>The content of your modal.</p>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button></div>
+            </div>
+        </div>
+    </div>
+    <!-------------->
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-animation.js"></script>
@@ -58,8 +72,26 @@
                     var posts = JSON.parse(r)
                     $.each(posts, function(index){
                         $('.timelineposts').html(
-                            $('.timelineposts').html() + '<blockquote class="blockquote" style="margin:30px;"><p class="mb-0">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(64,86,161);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" type="button" style="background-color:rgb(64,86,161);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
+                            $('.timelineposts').html() + '<blockquote class="blockquote" style="margin:30px;"><p class="mb-0">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
                         )
+
+                        $('[data-postid]').click(function(){
+                            var buttonid = $(this).attr('data-postid');
+                             $.ajax({
+                                type: "GET",
+                                url: "api/comments?postid=" + $(this).attr('data-postid'),
+                                processData: false,
+                                contentType: "application/json",
+                                data: '',
+                                success: function(r){
+                                    var res = JSON.parse(r)
+                                    showCommentsModal(res);
+                                },
+                                error: function(r){
+                                    console.log(r);
+                                }
+                            });
+                        });
 
                         $('[data-id]').click(function(){
                             var buttonid = $(this).attr('data-id');
@@ -86,6 +118,18 @@
                 }
             });
         });
+
+        function showCommentsModal(res){
+            $('.modal').modal('show')
+            var output = "";
+            for(var i = 0; i < res.length; i++){
+                output += res[i].Comment;
+                output += " - ";
+                output += res[i].CommentedBy;
+                output += "<hr />";
+            }
+            $('.modal-body').html(output)
+        }
     </script>
 </body>
 
