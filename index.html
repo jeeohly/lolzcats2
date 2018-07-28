@@ -18,11 +18,17 @@
 <body style="background-color:rgb(241,247,252);">
     <nav class="navbar navbar-light navbar-expand-md navigation-clean-search" style="background-color:rgb(255,255,255);">
         <div class="container"><a class="navbar-brand" href="#"><img src="assets/img/lolzcatz logo 2.png" style="width:200px;"></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <div
-                class="collapse navbar-collapse" id="navcol-1">
+
+            <div class="collapse navbar-collapse" id="navcol-1">
                 <form class="form-inline mr-auto" target="_self">
-                    <div class="form-group"><label for="search-field"><i class="fa fa-search"></i></label><input class="form-control search-field" type="search" name="search" id="search-field" style="width:200px;"></div>
+                    <div class="searchbox"><i class="glyphicon glyphicon-search"></i>
+                        <input class="form-control sbox" type="text">
+                        <ul class="list-group autocomplete" style="word-wrap:break-word;position:absolute;width:200px;z-index:100">
+                            
+                        </ul>
+                    </div>
                 </form>
+
                 <ul class="nav navbar-nav">
                     <li class="nav-item" role="presentation"><a class="nav-link active" href="#">Timeline</a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="#">Messages</a></li>
@@ -62,7 +68,36 @@
     <script src="assets/js/bs-animation.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $.ajax({
+        /////SEARCH REQUEST SHIT//////////////
+
+            $('.sbox').keyup(function() {
+                $('.autocomplete').html("")
+
+                $.ajax({
+                
+                    type: "GET",
+                    url: "api/search?query=" + $(this).val(),
+                    processData: false,
+                    contentType: "application/json",
+                    data: '',
+                    success: function(r) {
+                        r = JSON.parse(r)
+
+                        for(var i = 0; i < r.length; i++){
+                            console.log(r[i].body)
+                            $('.autocomplete').html(
+                                $('.autocomplete').html() + 
+                                '<a href="profile.php?username='+r[i].username+'#'+r[i].id+'"><li class="list-group-item"><span>'+r[i].body+'</span></li></a>'
+                            )
+                        }
+                    },
+                    error: function(r){
+                        console.log(r)
+                    }
+                })
+            })
+        ///////////////////////////////////////
+        $.ajax({
                 type: "GET",
                 url: "api/posts",
                 processData: false,

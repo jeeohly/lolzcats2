@@ -175,6 +175,11 @@ if(isset($_GET['username'])){
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-animation.js"></script>
     <script type="text/javascript">
+
+    function scrollToAnchor(aid){
+    	var aTag = $(aid);
+    	$('html,body').animate({scrollTop: aTag.offset().top}, 'slow');
+    }
         $(document).ready(function() {
             $.ajax({
                 type: "GET",
@@ -188,7 +193,7 @@ if(isset($_GET['username'])){
                         $('.timelineposts').html(
                             $('.timelineposts').html() + 
 
-                            '<blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;padding-left: 30px;">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
+                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;padding-left: 30px;">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
 
 
 
@@ -232,6 +237,8 @@ if(isset($_GET['username'])){
                             });
                         })
                     })
+
+                    scrollToAnchor(location.hash)
                 },
                 error: function(r) {
                     console.log(r)
