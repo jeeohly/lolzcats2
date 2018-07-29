@@ -117,7 +117,14 @@ if(isset($_GET['username'])){
             <div
                 class="collapse navbar-collapse" id="navcol-1">
                 <form class="form-inline mr-auto" target="_self">
-                    <div class="form-group"><label for="search-field"><i class="fa fa-search"></i></label><input class="form-control search-field" type="search" name="search" id="search-field" style="width:200px;"></div>
+
+                    <div class="searchbox"><i class="glyphicon glyphicon-search"></i>
+                        <input class="form-control sbox" type="text">
+                        <ul class="list-group autocomplete" style="word-wrap:break-word;position:absolute;width:200px;z-index:100">
+                            
+                        </ul>
+                    </div>
+
                 </form>
                 <ul class="nav navbar-nav">
                     <li class="nav-item" role="presentation"><a class="nav-link active" href="#">Timeline</a></li>
@@ -130,7 +137,7 @@ if(isset($_GET['username'])){
         </div>
         </div>
     </nav>
-    <div><h2 class="text-left" style="display: block; padding-left: 30px; width: 60%;margin-right: auto;margin-left: auto;margin-top:15px;margin-bottom:15px;color: rgb(0, 127, 255);"><?php echo $username; ?>'s profile <?php if($verified) { echo ' - C00l';} ?></h2>
+    <div><h2 class="text-left" style="display: block;width: 60%;margin-right: auto;margin-left: auto;margin-top:15px;margin-bottom:15px;color: rgb(0, 127, 255);"><?php echo $username; ?>'s profile <?php if($verified) { echo ' - C00l';} ?></h2>
     <!---------------------COLUMN STUFF-------------------->
    	<div>
    		<div class="container">
@@ -140,7 +147,7 @@ if(isset($_GET['username'])){
 				</blockquote></div>	
 
    				
-   					<div class="col-md-4 col-lg-8 col-xl-9 offset-lg-0 offset-xl-0">
+   					<div class="col-md-5 col-lg-8 col-xl-9 offset-lg-0 offset-xl-0">
    					
    						<div class="timelineposts">
 
@@ -149,15 +156,15 @@ if(isset($_GET['username'])){
               		</div>
 
                	<div class="col-md-4 col-lg-2 col-xl-1 offset-lg-0">
-                    <button class="btn btn-primary" type="button" style="margin:0px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width: 120;width: 120px;">New post</button>
+                    <button class="btn btn-primary" type="button" style="margin:0px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width: 120;width: 120px;" onclick="showNewPostModal()">New post</button>
                     
                 </div>
             </div>
             </div>
         </div>
     </div>  	
-    <!---------------MODAL--------->
-    <div class="modal fade" role="dialog" tabindex="-1" style="padding-top:100px;">
+    <!---------------MODAL FOR COMMENTS--------->
+    <div class="modal fade" id="commentsmodal" role="dialog" tabindex="-1" style="padding-top:100px;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -169,7 +176,27 @@ if(isset($_GET['username'])){
             </div>
         </div>
     </div>
-
+    <!------------MODAL FOR NEW POST---------->
+    <div class="modal fade" id="newpost" role="dialog" tabindex="-1" style="padding-top:100px;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Post</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                <div style="max-height: 400px; overflow-y: auto">
+                    <form action="profile.php?username=<?php echo $username; ?>" method="post" enctype="multipart/form-data">
+						<textarea name="postbody" rows="8" cols="60" style="display:block; margin-left: auto; margin-right: auto; margin-bottom: 5px;"></textarea>
+						<div style="display:block; margin-left: 25px;">
+							Upload an image:
+							<br />
+							<input type="file" name="postimg">
+							<input type="submit" name="post" value="post">
+						</div>
+					</form>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button></div>
+            </div>
+        </div>
+    </div>
     <!------------------------>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
@@ -181,6 +208,34 @@ if(isset($_GET['username'])){
     	$('html,body').animate({scrollTop: aTag.offset().top}, 'slow');
     }
         $(document).ready(function() {
+
+        	$('.sbox').keyup(function() {
+                $('.autocomplete').html("")
+
+                $.ajax({
+                
+                    type: "GET",
+                    url: "api/search?query=" + $(this).val(),
+                    processData: false,
+                    contentType: "application/json",
+                    data: '',
+                    success: function(r) {
+                        r = JSON.parse(r)
+
+                        for(var i = 0; i < r.length; i++){
+                            console.log(r[i].body)
+                            $('.autocomplete').html(
+                                $('.autocomplete').html() + 
+                                '<a href="profile.php?username='+r[i].username+'#'+r[i].id+'"><li class="list-group-item"><span>'+r[i].body+'</span></li></a>'
+                            )
+                        }
+                    },
+                    error: function(r){
+                        console.log(r)
+                    }
+                })
+            })
+
             $.ajax({
                 type: "GET",
                 url: "api/profileposts?username=<?php echo $username; ?>",
@@ -193,7 +248,7 @@ if(isset($_GET['username'])){
                         $('.timelineposts').html(
                             $('.timelineposts').html() + 
 
-                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;padding-left: 30px;">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
+                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;padding-left: 30px;width: 60%;margin-right: auto;">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin-left:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
 
 
 
@@ -246,8 +301,12 @@ if(isset($_GET['username'])){
             });
         });
 
+		function showNewPostModal(){
+			$('#newpost').modal('show')
+		}
+
         function showCommentsModal(res){
-            $('.modal').modal('show')
+            $('#commentsmodal').modal('show')
             var output = "";
             for(var i = 0; i < res.length; i++){
                 output += res[i].Comment;
