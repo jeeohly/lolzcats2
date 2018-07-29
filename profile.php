@@ -172,7 +172,7 @@ if(isset($_GET['username'])){
                 <div class="modal-body" style="max-height: 400px; overflow-y: auto">
                     <p>The content of your modal.</p>
                 </div>
-                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button></div>
+                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal" style="display:block;background-color:rgb(255,110,199);color:rgb(255,255,255)">Close</button></div>
             </div>
         </div>
     </div>
@@ -184,16 +184,20 @@ if(isset($_GET['username'])){
                     <h4 class="modal-title">New Post</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                 <div style="max-height: 400px; overflow-y: auto">
                     <form action="profile.php?username=<?php echo $username; ?>" method="post" enctype="multipart/form-data">
-						<textarea name="postbody" rows="8" cols="60" style="display:block; margin-left: auto; margin-right: auto; margin-bottom: 5px;"></textarea>
+                  
+						<textarea name="postbody" rows="8" cols="60" style="resize:none;display:block; margin-left: auto; margin-right: auto; margin-bottom: 5px;"></textarea>
+
 						<div style="display:block; margin-left: 25px;">
 							Upload an image:
 							<br />
-							<input type="file" name="postimg">
-							<input type="submit" name="post" value="post">
+							<!------<input type="file" name="postimg">
+							<input type="submit" name="post" value="post">----->
+							<input type="file" name="postimg" style="">
+							<button class="btn btn-light" type="submit" name="post" value="post" style="display:block;background-color:rgb(0,127,255);color:rgb(255,255,255);float:right;margin-right:25px;margin-bottom:5px;">Post</button>
 						</div>
 					</form>
                 </div>
-                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal">Close</button></div>
+                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal" style="display:block;background-color:rgb(255,110,199);color:rgb(255,255,255)">Close</button></div>
             </div>
         </div>
     </div>
@@ -201,6 +205,7 @@ if(isset($_GET['username'])){
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-animation.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.1.1/aos.js"></script>
     <script type="text/javascript">
 
     function scrollToAnchor(aid){
@@ -208,6 +213,13 @@ if(isset($_GET['username'])){
     	$('html,body').animate({scrollTop: aTag.offset().top}, 'slow');
     }
         $(document).ready(function() {
+
+        	$('textarea').keypress(function(event) {
+
+			    if (event.keyCode == 13) {
+			        event.preventDefault();
+			    }
+			});
 
         	$('.sbox').keyup(function() {
                 $('.autocomplete').html("")

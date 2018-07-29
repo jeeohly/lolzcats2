@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $followingposts = $db->query('SELECT posts.id, posts.body, posts.posted_at, posts.likes, users.`username` FROM users, posts
                 WHERE users.id = posts.user_id
                 AND users.id = :userid
-                ORDER BY posts.likes DESC;', array(':userid'=>$userid));
+                ORDER BY posts.posted_at DESC;', array(':userid'=>$userid));
 
                 $response = "[";
                 foreach($followingposts as $post){
