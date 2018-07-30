@@ -109,6 +109,7 @@ if(isset($_GET['username'])){
     <link rel="stylesheet" href="assets/css/Navigation-with-Button.css">
     <link rel="stylesheet" href="assets/css/Navigation-with-Search.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/untitled.css">
 </head>
 
 <body style="background-color:rgb(241,247,252);">
@@ -142,7 +143,7 @@ if(isset($_GET['username'])){
    	<div>
    		<div class="container">
    			<div class="row">			
-   				<div class="col-md-3 col-lg-2" style=""><h4 class="text-left" style="display: block; color: rgb(255,110,199); margin: 5px">About me</h4><blockquote class="blockquote">
+   				<div class="col-md-3 col-lg-2" style=""><h4 class="text-left" style="display: block; color: rgb(255,110,199);">About me</h4><blockquote class="">
     				<p class="mb-0">this is what i like and the shit i dont like lmao</p>
 				</blockquote></div>	
 
@@ -185,7 +186,7 @@ if(isset($_GET['username'])){
                 <div style="max-height: 400px; overflow-y: auto">
                     <form action="profile.php?username=<?php echo $username; ?>" method="post" enctype="multipart/form-data">
                   
-						<textarea name="postbody" rows="8" cols="60" style="resize:none;display:block; margin-left: auto; margin-right: auto; margin-bottom: 5px;"></textarea>
+						<textarea name="postbody" rows="8" cols="60" style="resize:none;display:block; margin-left: auto; margin-top:15px; margin-right: auto; margin-bottom: 5px;"></textarea>
 
 						<div style="display:block; margin-left: 25px;">
 							Upload an image:
@@ -257,15 +258,20 @@ if(isset($_GET['username'])){
                 success: function(r) {
                     var posts = JSON.parse(r)
                     $.each(posts, function(index){
-                        $('.timelineposts').html(
-                            $('.timelineposts').html() + 
 
-                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;padding-left: 30px;width: 60%;margin-right: auto;">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin-left:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
-
-
-
+                    	if(posts[index].PostImage == ""){
+	                        $('.timelineposts').html(
+	                            $('.timelineposts').html() + 
+	                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;padding-left: 30px;width: 60%;margin-right: auto;"><p>'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin-left:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
+                        	)
+                       	}else{
+                       		$('.timelineposts').html(
+	                            $('.timelineposts').html() + 
+	                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;padding-left: 30px;width: 60%;margin-right: auto;"><p>'+posts[index].PostBody+'</p><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postimg" id="img'+posts[index].postId+'"><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin-left:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
+	                        )
+                       	}
                             //'<blockquote class="blockquote" style="background-color:rgb(255,255,255); display: block;padding-left: 30px;width: 60%;margin-right: auto;margin-left: auto;">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
-                        )
+                        
 
                         $('[data-postid]').click(function(){
                             var buttonid = $(this).attr('data-postid');
@@ -304,6 +310,13 @@ if(isset($_GET['username'])){
                             });
                         })
                     })
+
+					$('.postimg').each(function(){
+						this.src=$(this).attr('data-tempsrc')
+						this.onload = function(){
+							this.style.opacity = '1';
+						}
+					})
 
                     scrollToAnchor(location.hash)
                 },
