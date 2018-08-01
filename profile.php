@@ -9,6 +9,8 @@ $username = "";
 $isFollowing = False;
 $verified = False;
 
+$profimg = "";
+
 if(isset($_GET['username'])){
 	if(DB::query('SELECT username FROM users WHERE username=:username', array(':username'=>$_GET['username']))){
 
@@ -16,6 +18,8 @@ if(isset($_GET['username'])){
 		$userid = DB::query('SELECT id FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['id'];
 		$verified =  DB::query('SELECT verified FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['verified'];
 		$followerid = login2::isLoggedIn();
+
+		$profimg = DB::query('SELECT profileimg FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['profileimg'];
 
 		if(isset($_POST['follow'])){
 
@@ -135,7 +139,7 @@ if(isset($_GET['username'])){
                         <div class="dropdown-menu" role="menu">
                         	<a class="dropdown-item" role="presentation" drop-id="1" href="#">My profile</a>
                         	<a class="dropdown-item" role="presentation" drop-id="2" href="#">Change password</a>
-                        	<a class="dropdown-item" role="presentation" drop-id="3" href="#">Upload profile pic</a>
+                        	<a class="dropdown-item" role="presentation" drop-id="3" href="my-account.php">Upload profile pic</a>
                         	<a class="dropdown-item" role="presentation" drop-id="4" href="logout.php">Logout</a>
                         </div>
                     </li>
@@ -144,31 +148,42 @@ if(isset($_GET['username'])){
         </div>
     </nav>
     <div><h2 class="text-left" style="display: block;width: 60%;margin-right: auto;margin-left: auto;margin-top:15px;margin-bottom:15px;color: rgb(0, 127, 255);"><?php echo $username; ?>'s profile <?php if($verified) { echo ' - C00l';} ?>
-    <!---------follow button-------------->
-    	<button class="btn btn-primary follow" id="follow" follow-id="1" type="submit" style="margin-left:15px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width: 120;">follow</button>
     </h2>
     <!---------------------COLUMN STUFF-------------------->
    	<div>
    		<div class="container">
    			<div class="row">
    							
-   				<div class="col-md-3 col-lg-2"><h4 class="text-left" style="display: block; color: rgb(255,110,199);">About me</h4><blockquote class="">
-    				<li class="list-group-item"><p class="mb-0">this is what i like and the shit i dont like lmao</p></li>
-				</blockquote></div>
+   				<div class="col-md-3 col-lg-2">
+   					<div class="profpicdisplay">
+
+   					</div>
+   					
+   					<!---------follow button-------------->
+   					<div class="followbutton">
+    		
+    				</div>
+    				<!-------------------------->
+   					<h4 class="text-left" style="display: block; color: rgb(255,110,199);">About me</h4>
+   					<blockquote class="">
+    					<li class="list-group-item"><p class="mb-0">this is what i like and the shit i dont like lmao</p></li>
+    				</blockquote>
+    			</div>
 
    				
    					<div class="col-md-5 col-lg-8 col-xl-9 offset-lg-0 offset-xl-0">
    					
    						<div class="timelineposts">
-
+   						<!-----------posts--------->
                         </div>
                     
               		</div>
-
-               	<div class="col-md-4 col-lg-2 col-xl-1 offset-lg-0">
-                    <button class="btn btn-primary" type="button" style="margin:0px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width: 120;" onclick="showNewPostModal()">New post</button>
-                    
-                </div>
+              	<div class="newpost">
+	               	<div class="col-md-4 col-lg-2 col-xl-1 offset-lg-0">
+	                    <!----------new post button--------------->
+	                    
+	                </div>
+	            </div>
             </div>
             </div>
         </div>
@@ -261,7 +276,7 @@ if(isset($_GET['username'])){
                 })
             })
 
-            ///////////////////////////////////////
+            /////////////////////MY STUFF//////////////////
         
 	        $.ajax({
 	            type: "GET",
@@ -284,6 +299,40 @@ if(isset($_GET['username'])){
 	                    }
 	                                
 	                })
+	                ///////NEW POST OPENS ONLY FOR LOGGED IN SELF USER//////////////
+			        if(r == '<?php echo $username; ?>'){
+				        $('.newpost').html(
+					        $('.newpost').html() +
+					            '<button class="btn btn-primary" type="button" style="margin:0px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width: 120;" onclick="showNewPostModal()">New post</button>'
+				        )
+				        
+			        }else{
+			        	$('.followbutton').html(
+			        		$('.followbutton').html() +
+			        		'<button class="btn btn-primary follow" id="follow" follow-id="1" type="submit" style="display:block;margin-bottom:15px;margin-left:auto;margin-right:auto;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%">follow</button>'
+			        	)
+			        }
+		            
+	              	///////////PROFILE PIC/////////////////////
+	              	if('<?php echo $profimg; ?>'){
+					    $('.profpicdisplay').html(
+					        $('.profpicdisplay').html() +
+					        	'<img src="" data-tempsrc="<?php echo $profimg; ?>" class="postimg" style="display:block;width:100%;">'
+					    )
+					}else{
+						$('.profpicdisplay').html(
+					        $('.profpicdisplay').html() +
+					        	'<img src="" data-tempsrc="https://i.imgur.com/ml86Eqw.jpg" class="postimg" style="display:block;width:100%;">'
+					    )
+					}
+				    $('.postimg').each(function(){
+					    this.src=$(this).attr('data-tempsrc')
+					    this.onload = function(){
+							this.style.opacity = '1';
+						}
+					})
+					//////////////////////////////
+
 	            }
 	        })
 
@@ -308,6 +357,7 @@ if(isset($_GET['username'])){
                 data: '',
                 success: function(r) {
                     var posts = JSON.parse(r)
+                    
                     $.each(posts, function(index){
 
                     	if(posts[index].PostImage == ""){
