@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html>
 
@@ -23,7 +25,7 @@
             <div class="collapse navbar-collapse" id="navcol-1">
                 <form class="form-inline mr-auto" target="_self">
                     <div class="searchbox"><i class="glyphicon glyphicon-search"></i>
-                        <input class="form-control sbox" type="text">
+                        <input class="form-control sbox" type="text" placeholder="search posts...">
                         <ul class="list-group autocomplete" style="word-wrap:break-word;position:absolute;width:200px;z-index:100">
                             
                         </ul>
@@ -35,7 +37,11 @@
                     <li class="nav-item" role="presentation"><a class="nav-link" href="#">Messages</a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="#">Notifications</a></li>
                     <li class="dropdown"><a class="dropdown-toggle nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">User</a>
-                        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">First Item</a><a class="dropdown-item" role="presentation" href="#">Second Item</a><a class="dropdown-item" role="presentation" href="#">Third Item</a></div>
+                        <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item" role="presentation" drop-id="1" href="#">My profile</a>
+                            <a class="dropdown-item" role="presentation" drop-id="2" href="#">Change password</a>
+                            <a class="dropdown-item" role="presentation" drop-id="3" href="#">Upload profile pic</a>
+                        </div>
                     </li>
                 </ul>
         </div>
@@ -101,6 +107,30 @@
                 })
             })
         ///////////////////////////////////////
+        
+        $.ajax({
+            type: "GET",
+            url: "api/users",
+            processData: false,
+            contentType: "application/json",
+            data: '',
+            success: function(r) {
+                
+                $('[drop-id]').click(function(){
+                    if($(this).attr('drop-id') == "1"){
+                        console.log("success1")
+                        window.open("profile.php?username="+r, "_self");
+                    }else if($(this).attr('drop-id') == "2"){
+                        console.log("success2")
+                    }else if($(this).attr('drop-id') == "3"){
+                        console.log("success3")
+                    }
+                                
+                })
+            }
+        })
+
+        /////////////////////////////////
         $.ajax({
                 type: "GET",
                 url: "api/posts",
@@ -112,7 +142,7 @@
                     $.each(posts, function(index){
                         $('.timelineposts').html(
                            
-                            $('.timelineposts').html() + '<li class="list-group-item" style="display: block;width: 50%;margin-right: auto;margin-left: auto;"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255);"><p>'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin-left:5px;">Comment</button></footer></blockquote></li>'
+                            $('.timelineposts').html() + '<li class="list-group-item" style="display: block;width: 50%;margin-right: auto;margin-left: auto;"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255);"><p>'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+'<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="margin-left:30px;background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin-left:5px;">Comment</button></footer></blockquote></li>'
                             
                         )
 
@@ -152,13 +182,19 @@
                                 }
                             });
                         })
+
                     })
                 },
                 error: function(r) {
                     console.log(r)
                 }
             });
+
+        //////////////my profile stuff/////////////
+
         });
+
+        
 
         function showCommentsModal(res){
             $('.modal').modal('show')

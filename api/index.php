@@ -27,9 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 //echo "<pre>";
                 echo json_encode($posts);
 
+        ///////TO GET USERNAME
         } else if ($_GET['url'] == "users") {
+                
+                $userid = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($_COOKIE['LOLID'])))[0]['user_id'];
+                $username = $db->query('SELECT username FROM users WHERE id=:userid', array(':userid'=>$userid))[0]['username'];
+                echo $username;
 
-
+        /////////////////////////////////////
         } else if ($_GET['url'] == "comments" && isset($_GET['postid'])) {
                 $output = "";
                 $comments = $db->query('SELECT comments.comment, users.username FROM comments, users WHERE post_id=:postid AND comments.user_id=users.id', array(':postid'=>$_GET['postid']));
@@ -55,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 WHERE posts.user_id = followers.user_id
                 AND users.id = posts.user_id
                 AND follower_id = :userid
-                ORDER BY posts.likes DESC;', array(':userid'=>$userid));
+                ORDER BY posts.posted_at DESC;', array(':userid'=>$userid));
 
                 $response = "[";
                 foreach($followingposts as $post){
@@ -127,6 +132,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                                                                 http_response_code(200);
                                                                 ///email
                                                                 Mail::sendMail('Welcome to LOLZCATZ U WONT REGRET IT', 'Your account has been created homeslice', $email);
+                                                                setcookie("LOLID", $token, time() + 60 * 60 * 24 * 7, '/', NULL, NULL, TRUE);
+                                                                setcookie("LOLID_", '1', time() + 60 * 60 * 24 * 3, '/', NULL, NULL, TRUE);
 
                                                         }else{
                                                                 echo '{ "Error": "Email in use" }';
@@ -170,6 +177,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                                 $user_id = $db->query('SELECT id FROM users WHERE username=:username', array(':username'=>$username))[0]['id'];
                                 $db->query('INSERT INTO login_tokens VALUES (\'\', :token, :user_id)', array(':token'=>sha1($token), ':user_id'=>$user_id));
                                 echo '{ "Token": "'.$token.'" }';
+                                setcookie("LOLID", $token, time() + 60 * 60 * 24 * 7, '/', NULL, NULL, TRUE);
+                                setcookie("LOLID_", '1', time() + 60 * 60 * 24 * 3, '/', NULL, NULL, TRUE);
                         } else {
                                 echo '{ "Error": "Invalid username or password!" }';
                                 http_response_code(401);

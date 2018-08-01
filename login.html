@@ -41,6 +41,7 @@
                         contentType: "application/json",
                         data: '{ "username": "'+ $("#username").val() +'", "password": "'+ $("#password").val() +'" }',
                         success: function(r) {
+                            window.open("index.html", "_self");
                             console.log(r)
                             
                             

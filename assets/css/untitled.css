@@ -1,6 +1,6 @@
 .blockquote {
   padding:10px 20px;
-  margin:0 0 20px;
+  margin:0 0 0px;
   font-size:17.5px;
   border-left:5px solid rgb(241,247,252);
 }
@@ -9,7 +9,20 @@
 	opacity: 0;
 	transition: all 2s ease-out;
 	width: 50%;
+	margin-bottom: 15px;
 }
 
+input[type="text"], textarea {
+background-color: rgb(241,247,252); 
+outline: none;
+box-shadow:none !important;
+border:1px solid #ccc !important;
+}
+
+input[type="button"], button {
+outline: none;
+box-shadow:none !important;
+border:1px solid #ccc !important;
+}
 
 

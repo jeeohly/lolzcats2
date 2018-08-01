@@ -120,7 +120,7 @@ if(isset($_GET['username'])){
                 <form class="form-inline mr-auto" target="_self">
 
                     <div class="searchbox"><i class="glyphicon glyphicon-search"></i>
-                        <input class="form-control sbox" type="text">
+                        <input class="form-control sbox" type="text" placeholder="search posts...">
                         <ul class="list-group autocomplete" style="word-wrap:break-word;position:absolute;width:200px;z-index:100">
                             
                         </ul>
@@ -128,11 +128,15 @@ if(isset($_GET['username'])){
 
                 </form>
                 <ul class="nav navbar-nav">
-                    <li class="nav-item" role="presentation"><a class="nav-link active" href="#">Timeline</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="index.html">Timeline</a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="#">Messages</a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="#">Notifications</a></li>
                     <li class="dropdown"><a class="dropdown-toggle nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">User</a>
-                        <div class="dropdown-menu" role="menu"><a class="dropdown-item" role="presentation" href="#">First Item</a><a class="dropdown-item" role="presentation" href="#">Second Item</a><a class="dropdown-item" role="presentation" href="#">Third Item</a></div>
+                        <div class="dropdown-menu" role="menu">
+                        	<a class="dropdown-item" role="presentation" href="#">My profile</a>
+                        	<a class="dropdown-item" role="presentation" href="#">Change password</a>
+                        	<a class="dropdown-item" role="presentation" href="#">Upload profile pic</a>
+                        </div>
                     </li>
                 </ul>
         </div>
@@ -142,10 +146,11 @@ if(isset($_GET['username'])){
     <!---------------------COLUMN STUFF-------------------->
    	<div>
    		<div class="container">
-   			<div class="row">			
-   				<div class="col-md-3 col-lg-2" style=""><h4 class="text-left" style="display: block; color: rgb(255,110,199);">About me</h4><blockquote class="">
-    				<p class="mb-0">this is what i like and the shit i dont like lmao</p>
-				</blockquote></div>	
+   			<div class="row">
+   							
+   				<div class="col-md-3 col-lg-2"><h4 class="text-left" style="display: block; color: rgb(255,110,199);">About me</h4><blockquote class="">
+    				<li class="list-group-item"><p class="mb-0">this is what i like and the shit i dont like lmao</p></li>
+				</blockquote></div>
 
    				
    					<div class="col-md-5 col-lg-8 col-xl-9 offset-lg-0 offset-xl-0">
@@ -188,17 +193,18 @@ if(isset($_GET['username'])){
                   
 						<textarea name="postbody" rows="8" cols="60" style="resize:none;display:block; margin-left: auto; margin-top:15px; margin-right: auto; margin-bottom: 5px;"></textarea>
 
-						<div style="display:block; margin-left: 25px;">
+						<div style="display:block; margin-left: 25px; margin-bottom: 10px;">
 							Upload an image:
 							<br />
 							<!------<input type="file" name="postimg">
 							<input type="submit" name="post" value="post">----->
 							<input type="file" name="postimg" style="">
-							<button class="btn btn-light" type="submit" name="post" value="post" style="display:block;background-color:rgb(0,127,255);color:rgb(255,255,255);float:right;margin-right:25px;margin-bottom:5px;">Post</button>
+							
 						</div>
-					</form>
-                </div>
-                <div class="modal-footer"><button class="btn btn-light" type="button" data-dismiss="modal" style="display:block;background-color:rgb(255,110,199);color:rgb(255,255,255)">Close</button></div>
+					
+	                </div>
+	                <div class="modal-footer"><button class="btn btn-light" type="submit" name="post" value="post" style="display:block;background-color:rgb(0,127,255);color:rgb(255,255,255);margin-right:5px;">Post</button><button class="btn btn-light" type="button" data-dismiss="modal" style="display:block;background-color:rgb(255,110,199);color:rgb(255,255,255)">Close</button></div>
+	                </form>
             </div>
         </div>
     </div>
@@ -218,6 +224,13 @@ if(isset($_GET['username'])){
         	$('textarea').keypress(function(event) {
 
 			    if (event.keyCode == 13) {
+			        event.preventDefault();
+			    }
+			});
+
+			$('textarea').keypress(function(event) {
+
+			    if (event.keyCode == 222) {
 			        event.preventDefault();
 			    }
 			});
@@ -262,12 +275,12 @@ if(isset($_GET['username'])){
                     	if(posts[index].PostImage == ""){
 	                        $('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;padding-left: 30px;width: 60%;margin-right: auto;"><p>'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin-left:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
+	                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;width: 60%;"><p>'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+'<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="margin-left:30px;background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="margin-left:5px;background-color:rgb(0,127,255);">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
                         	)
                        	}else{
                        		$('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;padding-left: 30px;width: 60%;margin-right: auto;"><p>'+posts[index].PostBody+'</p><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postimg" id="img'+posts[index].postId+'"><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin-left:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
+	                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;width: 60%;"><p>'+posts[index].PostBody+'</p><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postimg" id="img'+posts[index].postId+'"><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+'<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="margin-left:30px;background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin-left:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
 	                        )
                        	}
                             //'<blockquote class="blockquote" style="background-color:rgb(255,255,255); display: block;padding-left: 30px;width: 60%;margin-right: auto;margin-left: auto;">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
@@ -288,6 +301,7 @@ if(isset($_GET['username'])){
                                 error: function(r){
                                     console.log(r);
                                 }
+
                             });
                         });
 
@@ -309,6 +323,8 @@ if(isset($_GET['username'])){
                                 }
                             });
                         })
+
+                       
                     })
 
 					$('.postimg').each(function(){
