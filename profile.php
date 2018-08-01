@@ -63,7 +63,7 @@ if(isset($_GET['username'])){
             }
 		}
 
-		//////////posting///////////////
+		//////////postimg///////////////
 		if(isset($_POST['post'])){
 			if($_FILES['postimg']['size'] == 0){
 				post2::createPost($_POST['postbody'], login2::isLoggedIn(), $userid);
@@ -133,16 +133,20 @@ if(isset($_GET['username'])){
                     <li class="nav-item" role="presentation"><a class="nav-link" href="#">Notifications</a></li>
                     <li class="dropdown"><a class="dropdown-toggle nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">User</a>
                         <div class="dropdown-menu" role="menu">
-                        	<a class="dropdown-item" role="presentation" href="#">My profile</a>
-                        	<a class="dropdown-item" role="presentation" href="#">Change password</a>
-                        	<a class="dropdown-item" role="presentation" href="#">Upload profile pic</a>
+                        	<a class="dropdown-item" role="presentation" drop-id="1" href="#">My profile</a>
+                        	<a class="dropdown-item" role="presentation" drop-id="2" href="#">Change password</a>
+                        	<a class="dropdown-item" role="presentation" drop-id="3" href="#">Upload profile pic</a>
+                        	<a class="dropdown-item" role="presentation" drop-id="4" href="logout.php">Logout</a>
                         </div>
                     </li>
                 </ul>
         </div>
         </div>
     </nav>
-    <div><h2 class="text-left" style="display: block;width: 60%;margin-right: auto;margin-left: auto;margin-top:15px;margin-bottom:15px;color: rgb(0, 127, 255);"><?php echo $username; ?>'s profile <?php if($verified) { echo ' - C00l';} ?></h2>
+    <div><h2 class="text-left" style="display: block;width: 60%;margin-right: auto;margin-left: auto;margin-top:15px;margin-bottom:15px;color: rgb(0, 127, 255);"><?php echo $username; ?>'s profile <?php if($verified) { echo ' - C00l';} ?>
+    <!---------follow button-------------->
+    	<button class="btn btn-primary follow" id="follow" follow-id="1" type="submit" style="margin-left:15px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width: 120;">follow</button>
+    </h2>
     <!---------------------COLUMN STUFF-------------------->
    	<div>
    		<div class="container">
@@ -162,7 +166,7 @@ if(isset($_GET['username'])){
               		</div>
 
                	<div class="col-md-4 col-lg-2 col-xl-1 offset-lg-0">
-                    <button class="btn btn-primary" type="button" style="margin:0px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width: 120;width: 120px;" onclick="showNewPostModal()">New post</button>
+                    <button class="btn btn-primary" type="button" style="margin:0px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width: 120;" onclick="showNewPostModal()">New post</button>
                     
                 </div>
             </div>
@@ -228,12 +232,7 @@ if(isset($_GET['username'])){
 			    }
 			});
 
-			$('textarea').keypress(function(event) {
-
-			    if (event.keyCode == 222) {
-			        event.preventDefault();
-			    }
-			});
+			
 
         	$('.sbox').keyup(function() {
                 $('.autocomplete').html("")
@@ -261,6 +260,45 @@ if(isset($_GET['username'])){
                     }
                 })
             })
+
+            ///////////////////////////////////////
+        
+	        $.ajax({
+	            type: "GET",
+	            url: "api/users",
+	            processData: false,
+	            contentType: "application/json",
+	            data: '',
+	            success: function(r) {
+	                
+	                $('[drop-id]').click(function(){
+	                    if($(this).attr('drop-id') == "1"){
+	                        console.log("success1")
+	                        window.open("profile.php?username="+r, "_self");
+	                    }else if($(this).attr('drop-id') == "2"){
+	                        console.log("success2")
+	                    }else if($(this).attr('drop-id') == "3"){
+	                        console.log("success3")
+	                    }else if($(this).attr('drop-id') == "4"){
+	                        console.log("success4")
+	                    }
+	                                
+	                })
+	            }
+	        })
+
+	        /////////////follow//////////
+	        $.ajax({
+	        	type: "GET",
+	            url: "api/users",
+	            processData: false,
+	            contentType: "application/json",
+	            data: '',
+	        	success:function(r){
+                    console.log(r)
+                }
+            })
+            ////////////////////////////////////////
 
             $.ajax({
                 type: "GET",
@@ -323,7 +361,7 @@ if(isset($_GET['username'])){
                                 }
                             });
                         })
-
+                        
                        
                     })
 
