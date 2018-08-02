@@ -171,7 +171,7 @@ if(isset($_GET['username'])){
     			</div>
 
    				
-   					<div class="col-md-5 col-lg-8 col-xl-9 offset-lg-0 offset-xl-0">
+   					<div class="col-md-5 col-lg-8 col-xl-9 ">
    					
    						<div class="timelineposts">
    						<!-----------posts--------->
@@ -179,7 +179,7 @@ if(isset($_GET['username'])){
                     
               		</div>
               	<div class="newpost">
-	               	<div class="col-md-4 col-lg-2 col-xl-1 offset-lg-0">
+	               	<div class="col-md-4 col-lg-2 col-xl-1 ">
 	                    <!----------new post button--------------->
 	                    
 	                </div>
@@ -303,14 +303,57 @@ if(isset($_GET['username'])){
 			        if(r == '<?php echo $username; ?>'){
 				        $('.newpost').html(
 					        $('.newpost').html() +
-					            '<button class="btn btn-primary" type="button" style="margin:0px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width: 120;" onclick="showNewPostModal()">New post</button>'
+					            '<button class="btn btn-primary" type="button" style="display:block;margin-left:10px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%;" onclick="showNewPostModal()">New post</button>'
 				        )
-				        
+				    ////////////following stuff///////////////////
 			        }else{
-			        	$('.followbutton').html(
-			        		$('.followbutton').html() +
-			        		'<button class="btn btn-primary follow" id="follow" follow-id="1" type="submit" style="display:block;margin-bottom:15px;margin-left:auto;margin-right:auto;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%">follow</button>'
-			        	)
+			        	$.ajax({
+	            			type: "GET",
+	            			url: "api/follow?username=<?php echo $username; ?>",
+	            			processData: false,
+	            			contentType: "application/json",
+	            			data: '',
+	            			success: function(r) {
+	            				console.log(r);
+
+	            				if(r == "0"){
+							        $('.followbutton').html(
+								        $('.followbutton').html() +
+								        '<button class="btn btn-primary follow" follow-id="'+r+'" type="submit" style="display:block;margin-bottom:15px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%">follow</button>'
+								    )
+						    	}else if(r == "1"){
+						    		$('.followbutton').html(
+								        $('.followbutton').html() +
+								        '<button class="btn btn-primary follow" follow-id="'+r+'" type="submit" style="display:block;margin-bottom:15px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%">unfollow</button>'
+								    )
+						    	}
+						       												
+						        $('[follow-id]').click(function(){
+						        	var followid = $(this).attr('follow-id');
+						        	
+								    $.ajax({
+						                type: "POST",
+						                url: "api/follow?username=<?php echo $username; ?>",
+						                processData: false,
+						                contentType: "application/json",
+						                data: '',
+						                success: function(r){
+						                    console.log(r);
+						                    if(r == "1"){
+						                    	$("[follow-id='"+followid+"']").html('unfollow</button>');
+						                    	//console.log('followed')	
+						                    }else if (r == "0"){
+						                    	$("[follow-id='"+followid+"']").html('follow</button>');
+						                    	//console.log('unfollowed')	
+						                    }	                        
+						                }
+						            })
+							    	
+
+					     		})
+			     			}
+			     		})
+			        	
 			        }
 		            
 	              	///////////PROFILE PIC/////////////////////
@@ -335,19 +378,6 @@ if(isset($_GET['username'])){
 
 	            }
 	        })
-
-	        /////////////follow//////////
-	        $.ajax({
-	        	type: "GET",
-	            url: "api/users",
-	            processData: false,
-	            contentType: "application/json",
-	            data: '',
-	        	success:function(r){
-                    console.log(r)
-                }
-            })
-            ////////////////////////////////////////
 
             $.ajax({
                 type: "GET",
@@ -411,7 +441,6 @@ if(isset($_GET['username'])){
                                 }
                             });
                         })
-                        
                        
                     })
 

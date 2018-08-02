@@ -34,7 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $username = $db->query('SELECT username FROM users WHERE id=:userid', array(':userid'=>$userid))[0]['username'];
                 echo $username;
 
-        /////////////////////////////////////
+        ///////////////////follow//////////////
+        } else if ($_GET['url'] == "follow") {
+                $isFollowing = "0"; 
+                $userid = $db->query('SELECT id FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['id'];
+                $followerid = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($_COOKIE['LOLID'])))[0]['user_id'];
+
+                if($db->query('SELECT follower_id from followers WHERE user_id=:userid AND follower_id=:followerid', array(':userid'=>$userid, ':followerid'=>$followerid))){
+                        $isFollowing = "1";
+                }
+
+                echo $isFollowing;
+
         } else if ($_GET['url'] == "comments" && isset($_GET['postid'])) {
                 $output = "";
                 $comments = $db->query('SELECT comments.comment, users.username FROM comments, users WHERE post_id=:postid AND comments.user_id=users.id', array(':postid'=>$_GET['postid']));
@@ -209,7 +220,38 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 echo '"Likes":';
                 echo $db->query('SELECT likes FROM posts WHERE id=:postid', array(':postid'=>$postId))[0]['likes'];
                 echo "}";
-        }
+        //////////////FOLLOW//////////////////////////
+        } else if ($_GET['url'] == "follow"){
+                $isFollowing = "0"; 
+                $userid = $db->query('SELECT id FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['id'];
+                $followerid = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($_COOKIE['LOLID'])))[0]['user_id'];
+
+                if($userid != $followerid){
+                        if(!$db->query('SELECT follower_id from followers WHERE user_id=:userid AND follower_id=:followerid', array('userid'=>$userid, ':followerid'=>$followerid))){
+
+                                if($followerid == 13){
+                                        $db->query('UPDATE users SET verified=1 WHERE id=:userid', array(':userid'=>$userid));
+                                }
+
+                                $db->query('INSERT INTO followers VALUES (\'\', :userid, :followerid)', array('userid'=>$userid, ':followerid'=>$followerid));
+                                $isFollowing = "1";
+                        }else{
+                                if($db->query('SELECT follower_id from followers WHERE user_id=:userid AND follower_id=:followerid', array('userid'=>$userid, ':followerid'=>$followerid))){
+
+                                        if($followerid == 13){
+                                                $db->query('UPDATE users SET verified=0 WHERE id=:userid', array(':userid'=>$userid));
+
+                                        }
+
+                                        $db->query('DELETE FROM followers WHERE user_id=:userid AND follower_id=:followerid', array('userid'=>$userid, ':followerid'=>$followerid));
+                                        $isFollowing = "0";
+                                }
+                                
+                        }
+                        
+                }
+                echo $isFollowing;
+        } 
         ////////////////
 }  else if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
         if ($_GET['url'] == "auth") {
