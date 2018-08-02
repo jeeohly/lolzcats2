@@ -99,15 +99,28 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 WHERE users.id = posts.user_id
                 AND users.id = :userid
                 ORDER BY posts.posted_at DESC;', array(':userid'=>$userid));
-
+                ///////////////
+                $isliked = " Unlike";
+                $token = $_COOKIE['LOLID'];
+                $likerId = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($token)))[0]['user_id'];
+                //////////////////////////////
                 $response = "[";
                 foreach($followingposts as $post){
+                        /////////STUFF TO GET UNLIKE DISPLAY//////////////////
+                        $postId = $post['id'];
+                        if (!$db->query('SELECT user_id FROM post_likes WHERE post_id=:postid AND user_id=:userid', array(':postid'=>$postId, ':userid'=>$likerId))) {
+                                $isliked = " Likes";
+                        }else{
+                                $isliked = " Unlike";
+                        }
+                        ///////////////////////////////////
                         $response .= "{";
                                 $response .= '"PostId": '.$post['id'].',';
                                 $response .= '"PostBody": "'.$post['body'].'",';
                                 $response .= '"PostedBy": "'.$post['username'].'",';
                                 $response .= '"PostDate": "'.$post['posted_at'].'",';
                                 $response .= '"PostImage": "'.$post['postimg'].'",';
+                                $response .= '"isLiked": "'.$isliked.'",';
                                 $response .= '"Likes": '.$post['likes'].'';
                         $response .= "},";
 
@@ -201,6 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         ////////LIKES//////////
         } else if ($_GET['url'] == "likes"){
 
+                $isliked = "0";
                 $postId = $_GET['id'];
                 $token = $_COOKIE['LOLID'];
 
@@ -211,14 +225,18 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         $db->query('UPDATE posts SET likes=likes+1 WHERE id=:postid', array(':postid'=>$postId));
                         $db->query('INSERT INTO post_likes VALUES (\'\', :postid, :userid)', array(':postid'=>$postId, ':userid'=>$likerId));
                         //Notify::createNotify("", $postId);
+                        $isliked = "1";
                 } else {
                         $db->query('UPDATE posts SET likes=likes-1 WHERE id=:postid', array(':postid'=>$postId));
                         $db->query('DELETE FROM post_likes WHERE post_id=:postid AND user_id=:userid', array(':postid'=>$postId, ':userid'=>$likerId));
+                        $isliked = "0";
                 }
 
                 echo "{";
                 echo '"Likes":';
-                echo $db->query('SELECT likes FROM posts WHERE id=:postid', array(':postid'=>$postId))[0]['likes'];
+                echo $db->query('SELECT likes FROM posts WHERE id=:postid', array(':postid'=>$postId))[0]['likes'].',';
+                echo '"isLiked":';
+                echo $isliked;
                 echo "}";
         //////////////FOLLOW//////////////////////////
         } else if ($_GET['url'] == "follow"){

@@ -393,12 +393,12 @@ if(isset($_GET['username'])){
                     	if(posts[index].PostImage == ""){
 	                        $('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;width: 60%;"><p>'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+'<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="margin-left:30px;background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="margin-left:5px;background-color:rgb(0,127,255);">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
+	                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;width: 60%;"><p>'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+'<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="margin-left:30px;background-color:rgb(0,127,255);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="margin-left:5px;background-color:rgb(0,127,255);">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
                         	)
                        	}else{
                        		$('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;width: 60%;"><p>'+posts[index].PostBody+'</p><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postimg" id="img'+posts[index].postId+'"><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+'<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="margin-left:30px;background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin-left:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
+	                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;width: 60%;"><p>'+posts[index].PostBody+'</p><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postimg" id="img'+posts[index].postId+'"><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+'<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="margin-left:30px;background-color:rgb(0,127,255);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin-left:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote></li>'
 	                        )
                        	}
                             //'<blockquote class="blockquote" style="background-color:rgb(255,255,255); display: block;padding-left: 30px;width: 60%;margin-right: auto;margin-left: auto;">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
@@ -433,8 +433,14 @@ if(isset($_GET['username'])){
                                 data: '',
                                 success: function(r){
                                     var res = JSON.parse(r)
-                                    $("[data-id='"+buttonid+"']").html(''+res.Likes+' Likes</button>');
-                                    console.log(r);
+                                    console.log(res.isLiked);
+                                    if(res.isLiked == "0"){
+                                    	$("[data-id='"+buttonid+"']").html(''+res.Likes+' Likes</button>');
+                                    	console.log(r);
+                                    }else if(res.isLiked == "1"){
+                                    	$("[data-id='"+buttonid+"']").html(''+res.Likes+' Unlike</button>');
+                                    	console.log(r);
+                                    }
                                 },
                                 error: function(r){
                                     console.log(r);
