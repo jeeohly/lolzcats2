@@ -72,15 +72,29 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 AND users.id = posts.user_id
                 AND follower_id = :userid
                 ORDER BY posts.posted_at DESC;', array(':userid'=>$userid));
-
+                ///////////////
+                $isliked = " Unlike";
+                $token = $_COOKIE['LOLID'];
+                $likerId = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($token)))[0]['user_id'];
+                //////////////////////////////
                 $response = "[";
                 foreach($followingposts as $post){
+                        /////////STUFF TO GET UNLIKE DISPLAY//////////////////
+                        $postId = $post['id'];
+                        if (!$db->query('SELECT user_id FROM post_likes WHERE post_id=:postid AND user_id=:userid', array(':postid'=>$postId, ':userid'=>$likerId))) {
+                                $isliked = " Likes";
+                        }else{
+                                $isliked = " Unlike";
+                        }
+                        ///////////////////////////////////
                         $response .= "{";
+
                                 $response .= '"PostId": '.$post['id'].',';
                                 $response .= '"PostBody": "'.$post['body'].'",';
                                 $response .= '"PostedBy": "'.$post['username'].'",';
                                 $response .= '"PostDate": "'.$post['posted_at'].'",';
                                 $response .= '"PostImage": "'.$post['postimg'].'",';
+                                $response .= '"isLiked": "'.$isliked.'",';
                                 $response .= '"Likes": '.$post['likes'].'';
                         $response .= "},";
 
