@@ -147,45 +147,47 @@ if(isset($_GET['username'])){
         </div>
         </div>
     </nav>
-    <div><h2 class="text-left" style="display: block;width: 60%;margin-right: auto;margin-left: auto;margin-top:15px;margin-bottom:15px;color: rgb(0, 127, 255);"><?php echo $username; ?>'s profile <?php if($verified) { echo ' - C00l';} ?>
-    </h2>
+    <div>
     <!---------------------COLUMN STUFF-------------------->
    	<div>
-   		<div class="container">
+   		<div class="container" style="margin-top:15px;">
    			<div class="row">
    							
-   				<div class="col-md-3 col-lg-2">
+   				<div class="col-xl-3">
    					<div class="profpicdisplay">
 
    					</div>
+
+   					<h2 style="text-align:center;margin-bottom:15px;color:rgb(0, 127, 255);"><?php echo $username; ?> <?php if($verified) { echo ' - C00l';} ?>
+    				</h2>
    					
    					<!---------follow button-------------->
    					<div class="followbutton">
-    		
+    					
     				</div>
     				<!-------------------------->
-   					<h4 class="text-left" style="display: block; color: rgb(255,110,199);">About me</h4>
+   					<h4 style="color: rgb(255,110,199);">About me</h4>
    					<blockquote class="">
     					<li class="list-group-item"><p class="mb-0">this is what i like and the shit i dont like lmao</p></li>
     				</blockquote>
     			</div>
 
    				
-   					<div class="col-md-5 col-lg-8 col-xl-9 ">
+   					<div class="col-xl-6">
    					
    						<div class="timelineposts">
    						<!-----------posts--------->
                         </div>
                     
               		</div>
-              	<div class="newpost">
-	               	<div class="col-md-4 col-lg-2 col-xl-1 ">
+              	<div class="col-xl-3">
+	               	<div class="newpost">
 	                    <!----------new post button--------------->
 	                    
 	                </div>
 	            </div>
             </div>
-            </div>
+        </div>
         </div>
     </div>  	
     <!---------------MODAL FOR COMMENTS--------->
@@ -303,7 +305,7 @@ if(isset($_GET['username'])){
 			        if(r == '<?php echo $username; ?>'){
 				        $('.newpost').html(
 					        $('.newpost').html() +
-					            '<button class="btn btn-primary" type="button" style="display:block;margin-left:10px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%;" onclick="showNewPostModal()">New post</button>'
+					            '<button class="btn btn-primary" type="button" style="display:block;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%;" onclick="showNewPostModal()">New post</button>'
 				        )
 				    ////////////following stuff///////////////////
 			        }else{
@@ -360,12 +362,12 @@ if(isset($_GET['username'])){
 	              	if('<?php echo $profimg; ?>'){
 					    $('.profpicdisplay').html(
 					        $('.profpicdisplay').html() +
-					        	'<img src="" data-tempsrc="<?php echo $profimg; ?>" class="postimg" style="display:block;width:100%;">'
+					        	'<img src="" data-tempsrc="<?php echo $profimg; ?>" class="postimg" style="width:100%;display:block;margin-right:auto;margin-left:auto;border-radius: 50%;object-fit:cover;width:150px;height:150px;margin-bottom:10px">'
 					    )
 					}else{
 						$('.profpicdisplay').html(
 					        $('.profpicdisplay').html() +
-					        	'<img src="" data-tempsrc="https://i.imgur.com/ml86Eqw.jpg" class="postimg" style="display:block;width:100%;">'
+					        	'<img src="" data-tempsrc="https://i.imgur.com/ml86Eqw.jpg" class="postimg" style="width:100%;display:block;margin-right:auto;margin-left:auto;border-radius: 50%;object-fit:cover;width:150px;height:150px;">'
 					    )
 					}
 				    $('.postimg').each(function(){
@@ -393,12 +395,12 @@ if(isset($_GET['username'])){
                     	if(posts[index].PostImage == ""){
 	                        $('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;width: 60%;"><p>'+posts[index].PostBody+'</p><footer class="blockquote-footer" style="margin-bottom:5px">'+posts[index].PostedBy+', '+posts[index].PostDate+'</footer><button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="margin-left:5px;background-color:rgb(0,127,255);">Comment</button><button class="btn btn-primary btn-sm" type="button" style="margin-left:5px;background-color:rgb(0,127,255);">Report</button></blockquote></li>'
+	                            '<div style="margin-bottom:10px;"><li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;"><p>'+posts[index].PostBody+'</p><footer class="blockquote-footer" style="margin-bottom:5px">'+posts[index].PostedBy+', '+posts[index].PostDate+'</footer></blockquote></li><button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);">Comment</button></div>'
                         	)
                        	}else{
                        		$('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;width: 60%;"><p>'+posts[index].PostBody+'</p><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postimg" id="img'+posts[index].postId+'"><footer class="blockquote-footer" style="margin-bottom:5px">'+posts[index].PostedBy+', '+posts[index].PostDate+'</footer><button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin-left:5px;">Comment</button><button class="btn btn-primary btn-sm" type="button" style="margin-left:5px;background-color:rgb(0,127,255);">Report</button></blockquote></li>'
+	                            '<div style="margin-bottom:10px;"><li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;"><p>'+posts[index].PostBody+'</p><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postimg" id="img'+posts[index].postId+'"><footer class="blockquote-footer" style="margin-bottom:5px">'+posts[index].PostedBy+', '+posts[index].PostDate+'</footer></li><button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(255,255,255);color:rgb(33,37,41);width:50%;">Comment</button></div>'
 	                        )
                        	}
                             //'<blockquote class="blockquote" style="background-color:rgb(255,255,255); display: block;padding-left: 30px;width: 60%;margin-right: auto;margin-left: auto;">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'

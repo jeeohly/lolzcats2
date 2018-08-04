@@ -9,7 +9,6 @@
 	opacity: 0;
 	transition: all 2s ease-out;
 	width: 50%;
-	margin-bottom: 15px;
 }
 
 input[type="text"], textarea {
@@ -24,5 +23,7 @@ outline: none;
 box-shadow:none !important;
 border:1px solid #ccc !important;
 }
+
+
 
 
