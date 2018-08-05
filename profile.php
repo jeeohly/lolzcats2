@@ -118,7 +118,7 @@ if(isset($_GET['username'])){
 
 <body style="background-color:rgb(241,247,252);">
     <nav class="navbar navbar-light navbar-expand-md navigation-clean-search" style="background-color:rgb(255,255,255);">
-        <div class="container"><a class="navbar-brand" href="#"><img src="assets/img/lolzcatz logo 2.png" style="width:200px;background-color:none;"></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container"><a class="navbar-brand" href="#"><img src="assets/img/lolzcatz logo 2.png" style="width:100px;background-color:none;"></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div
                 class="collapse navbar-collapse" id="navcol-1">
                 <form class="form-inline mr-auto" target="_self">
@@ -158,7 +158,7 @@ if(isset($_GET['username'])){
 
    					</div>
 
-   					<h2 style="text-align:center;margin-bottom:15px;color:rgb(0, 127, 255);"><?php echo $username; ?> <?php if($verified) { echo ' - C00l';} ?>
+   					<h2 style="text-align:center;margin-bottom:15px;color:rgb(0, 127, 255);"><?php echo $username; ?> <?php if($verified) { echo ' <img src="assets/img/verified marker.png" style="width:25px;background-color:none;">';} ?>
     				</h2>
    					
    					<!---------follow button-------------->
@@ -166,10 +166,19 @@ if(isset($_GET['username'])){
     					
     				</div>
     				<!-------------------------->
-   					<h4 style="color: rgb(255,110,199);">About me</h4>
-   					<blockquote class="">
-    					<li class="list-group-item"><p class="mb-0">this is what i like and the shit i dont like lmao</p></li>
-    				</blockquote>
+    				<li class="list-group-item" style="height:70px;display:inline-block;float:left;margin-bottom:10px;width:33.333%;"><p align="center" class="mb-0" style="font-size:12px;">Posts</p>
+    					<div class="postcount"></div>
+    				</li>
+    				<li class="list-group-item" style="height:70px;display:inline-block;float:left;margin-bottom:10px;width:33.333%;"><p align="center" class="mb-0" style="font-size:12px;">Followers</p>
+    					<div class="followercount"></div>
+    				</li>
+    				<li class="list-group-item" style="height:70px;display:inline-block;float:left;margin-bottom:10px;width:33.333%;"><p align="center" class="mb-0" style="font-size:12px;">Following</p>
+    					<div class="followingcount"></div>
+    				</li>
+    				
+   					
+    				<li class="list-group-item" style="margin-bottom:10px;width:100%;display:inline-block;"><p class="mb-0" style="font-weight:600;font-size:20px;color:rgb(255,110,199);">About me</p><p class="mb-0">this is what i like and the shit i dont like lmao</p></li>
+
     			</div>
 
    				
@@ -279,6 +288,29 @@ if(isset($_GET['username'])){
             })
 
             /////////////////////MY STUFF//////////////////
+
+            ///////////////////stats////////////////
+			$.ajax({
+				type: "GET",
+			    url: "api/stats?username=<?php echo $username; ?>",
+			    processData: false,
+			    contentType: "application/json",
+			    data: '',
+			    success:function(r){
+					var res = JSON.parse(r);
+					$('.postcount').html(
+					    $('.postcount').html() + '<p align="center" class="mb-0" stat-id="1" style="font-size:18px;">'+res.postcount+'</p>'
+					)
+					$('.followercount').html(
+					    $('.followercount').html() + '<p align="center" class="mb-0" stat-id="2" style="font-size:18px;">'+res.followercount+'</p>'
+					)
+					$('.followingcount').html(
+					    $('.followingcount').html() + '<p align="center" class="mb-0" stat-id="3" style="font-size:18px;">'+res.followingcount+'</p>'
+					)
+			    }
+					                
+			})
+			////////////////////////////////
         
 	        $.ajax({
 	            type: "GET",
@@ -321,12 +353,12 @@ if(isset($_GET['username'])){
 	            				if(r == "0"){
 							        $('.followbutton').html(
 								        $('.followbutton').html() +
-								        '<button class="btn btn-primary follow" follow-id="'+r+'" type="submit" style="display:block;margin-bottom:15px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%">follow</button>'
+								        '<button class="btn btn-primary follow" follow-id="'+r+'" type="submit" style="display:block;margin-bottom:10px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%">follow</button>'
 								    )
 						    	}else if(r == "1"){
 						    		$('.followbutton').html(
 								        $('.followbutton').html() +
-								        '<button class="btn btn-primary follow" follow-id="'+r+'" type="submit" style="display:block;margin-bottom:15px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%">unfollow</button>'
+								        '<button class="btn btn-primary follow" follow-id="'+r+'" type="submit" style="display:block;margin-bottom:10px;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%">unfollow</button>'
 								    )
 						    	}
 						       												
@@ -340,14 +372,16 @@ if(isset($_GET['username'])){
 						                contentType: "application/json",
 						                data: '',
 						                success: function(r){
-						                    console.log(r);
-						                    if(r == "1"){
+						                	var res = JSON.parse(r);
+						                    console.log(res.isfollowing);
+						                    if(res.isfollowing == "1"){
 						                    	$("[follow-id='"+followid+"']").html('unfollow</button>');
 						                    	//console.log('followed')	
-						                    }else if (r == "0"){
+						                    }else if (res.isfollowing == "0"){
 						                    	$("[follow-id='"+followid+"']").html('follow</button>');
 						                    	//console.log('unfollowed')	
-						                    }	                        
+						                    }
+						                   	$("[stat-id=2]").html(''+res.followercount+'</p>');                     
 						                }
 						            })
 							    	
@@ -362,12 +396,12 @@ if(isset($_GET['username'])){
 	              	if('<?php echo $profimg; ?>'){
 					    $('.profpicdisplay').html(
 					        $('.profpicdisplay').html() +
-					        	'<img src="" data-tempsrc="<?php echo $profimg; ?>" class="postimg" style="width:100%;display:block;margin-right:auto;margin-left:auto;border-radius: 50%;object-fit:cover;width:150px;height:150px;margin-bottom:10px">'
+					        	'<img src="" data-tempsrc="<?php echo $profimg; ?>" class="postimg" style="border:1px solid #ccc;border-radius: 50%;width:100%;display:block;margin-right:auto;margin-left:auto;border-radius: 50%;object-fit:cover;width:150px;height:150px;margin-bottom:10px">'
 					    )
 					}else{
 						$('.profpicdisplay').html(
 					        $('.profpicdisplay').html() +
-					        	'<img src="" data-tempsrc="https://i.imgur.com/ml86Eqw.jpg" class="postimg" style="width:100%;display:block;margin-right:auto;margin-left:auto;border-radius: 50%;object-fit:cover;width:150px;height:150px;">'
+					        	'<img src="" data-tempsrc="https://i.imgur.com/ml86Eqw.jpg" class="postimg" style="border:1px solid #ccc;border-radius: 50%;width:100%;display:block;margin-right:auto;margin-left:auto;border-radius: 50%;object-fit:cover;width:150px;height:150px;">'
 					    )
 					}
 				    $('.postimg').each(function(){
@@ -380,6 +414,7 @@ if(isset($_GET['username'])){
 
 	            }
 	        })
+			
 
             $.ajax({
                 type: "GET",
@@ -395,13 +430,14 @@ if(isset($_GET['username'])){
                     	if(posts[index].PostImage == ""){
 	                        $('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<div style="margin-bottom:10px;"><li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;"><p>'+posts[index].PostBody+'</p><footer class="blockquote-footer" style="margin-bottom:5px">'+posts[index].PostedBy+', '+posts[index].PostDate+'</footer></blockquote></li><button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);">Comment</button></div>'
+	                            '<div style="margin-bottom:10px;"><li class="list-group-item"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postimg" id="img'+posts[index].postId+'" style="border:1px solid #ccc;border-radius: 50%;object-fit:cover;width:40px;height:40px;margin-bottom:0px;margin-right:10px;">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></li><li class="list-group-item" id="'+posts[index].PostId+'"><p class="mb-0">'+posts[index].PostBody+'</p></li><button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);" onclick="showCommentsModal()">Comment</button></div>'
                         	)
                        	}else{
                        		$('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<div style="margin-bottom:10px;"><li class="list-group-item" id="'+posts[index].PostId+'"><blockquote class="blockquote" style="word-wrap: break-word; background-color:rgb(255,255,255); display: block;"><p>'+posts[index].PostBody+'</p><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postimg" id="img'+posts[index].postId+'"><footer class="blockquote-footer" style="margin-bottom:5px">'+posts[index].PostedBy+', '+posts[index].PostDate+'</footer></li><button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(255,255,255);color:rgb(33,37,41);width:50%;">Comment</button></div>'
+	                            '<div style="margin-bottom:10px;"><li class="list-group-item"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postimg" id="img'+posts[index].postId+'" style="border:1px solid #ccc;border-radius: 50%;object-fit:cover;width:40px;height:40px;margin-bottom:0px;margin-right:10px;">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></li><li class="list-group-item" id="'+posts[index].PostId+'"><p class="mb-1">'+posts[index].PostBody+'</p><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postimg" id="img'+posts[index].postId+'" style="border-radius:4px;border:1px solid #ccc;margin-bottom:0px"></li><button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(255,255,255);color:rgb(33,37,41);width:50%;" onclick="showCommentsModal()">Comment</button></div>'
 	                        )
+
                        	}
                             //'<blockquote class="blockquote" style="background-color:rgb(255,255,255); display: block;padding-left: 30px;width: 60%;margin-right: auto;margin-left: auto;">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
                         
@@ -449,7 +485,23 @@ if(isset($_GET['username'])){
                                 }
                             });
                         })
-                       
+
+                        $('[delete-id]').click(function(){
+                        	var buttonid = $(this).attr('delete-id');
+                        	$.ajax({
+                        		type: "DELETE",
+                                url: "api/postdelete?id=" + $(this).attr('delete-id'),
+                                processData: false,
+                                contentType: "application/json",
+                                data: '',
+                                success: function(r){
+                                	console.log(r);
+                                	if(r == "1"){
+                                		window.open("profile.php?username=<?php echo $username; ?>", "_self");
+                                	}
+                                }
+                        	})
+                       	})
                     })
 
 					$('.postimg').each(function(){

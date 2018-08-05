@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
                 $userid = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($token)))[0]['user_id'];
 
-                $followingposts = $db->query('SELECT posts.id, posts.body, posts.postimg, posts.posted_at, posts.likes, users.`username` FROM users, posts, followers
+                $followingposts = $db->query('SELECT posts.user_id, posts.id, posts.body, posts.postimg, posts.posted_at, posts.likes, users.`username` FROM users, posts, followers
                 WHERE posts.user_id = followers.user_id
                 AND users.id = posts.user_id
                 AND follower_id = :userid
@@ -77,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $token = $_COOKIE['LOLID'];
                 $likerId = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($token)))[0]['user_id'];
                 //////////////////////////////
+                $profpic = "";
                 $response = "[";
                 foreach($followingposts as $post){
                         /////////STUFF TO GET UNLIKE DISPLAY//////////////////
@@ -86,7 +87,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         }else{
                                 $isliked = " Unlike";
                         }
-                        ///////////////////////////////////
+                        ////////////////////////////PROF PIC////////////////
+                        $profpic = $db->query('SELECT profileimg FROM users WHERE id=:userid', array(':userid'=>$post['user_id']))[0]['profileimg'];
+                        //////////////////////////////////////
                         $response .= "{";
 
                                 $response .= '"PostId": '.$post['id'].',';
@@ -95,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                                 $response .= '"PostDate": "'.$post['posted_at'].'",';
                                 $response .= '"PostImage": "'.$post['postimg'].'",';
                                 $response .= '"isLiked": "'.$isliked.'",';
+                                $response .= '"Profpic": "'.$profpic.'",';
                                 $response .= '"Likes": '.$post['likes'].'';
                         $response .= "},";
 
@@ -109,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
                 $userid = $db->query('SELECT id FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['id'];
 
-                $followingposts = $db->query('SELECT posts.id, posts.body, posts.posted_at, posts.postimg, posts.likes, users.`username` FROM users, posts
+                $followingposts = $db->query('SELECT posts.user_id, posts.id, posts.body, posts.posted_at, posts.postimg, posts.likes, users.`username` FROM users, posts
                 WHERE users.id = posts.user_id
                 AND users.id = :userid
                 ORDER BY posts.posted_at DESC;', array(':userid'=>$userid));
@@ -117,7 +121,11 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $isliked = " Unlike";
                 $token = $_COOKIE['LOLID'];
                 $likerId = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($token)))[0]['user_id'];
+
                 //////////////////////////////
+                $profpic = "";
+                $deletereport = "report";
+
                 $response = "[";
                 foreach($followingposts as $post){
                         /////////STUFF TO GET UNLIKE DISPLAY//////////////////
@@ -127,7 +135,12 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         }else{
                                 $isliked = " Unlike";
                         }
-                        ///////////////////////////////////
+                        if($db->query('SELECT user_id FROM posts WHERE id=:postid AND user_id=:userid', array(':postid'=>$postId, ':userid'=>$likerId))){
+                                $deletereport = "delete";
+                        }
+                        ////////////////////////////PROF PIC////////////////
+                        $profpic = $db->query('SELECT profileimg FROM users WHERE id=:userid', array(':userid'=>$post['user_id']))[0]['profileimg'];
+                        //////////////////////////////////////
                         $response .= "{";
                                 $response .= '"PostId": '.$post['id'].',';
                                 $response .= '"PostBody": "'.$post['body'].'",';
@@ -135,6 +148,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                                 $response .= '"PostDate": "'.$post['posted_at'].'",';
                                 $response .= '"PostImage": "'.$post['postimg'].'",';
                                 $response .= '"isLiked": "'.$isliked.'",';
+                                $response .= '"Profpic": "'.$profpic.'",';
+                                $response .= '"Deletereport": "'.$deletereport.'",';
                                 $response .= '"Likes": '.$post['likes'].'';
                         $response .= "},";
 
@@ -144,9 +159,24 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 
                 http_response_code(200);
                 echo $response;
-             
-        }
+        ///////////////STATS////////////////////////
+        }else if ($_GET['url'] == "stats") {
+                $userid = $db->query('SELECT id FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['id'];
 
+                $postcount = $db->query('SELECT id FROM posts WHERE user_id=:userid', array(':userid'=>$userid));
+                $followercount = $db->query('SELECT id FROM followers WHERE user_id=:userid', array(':userid'=>$userid));
+                $followingcount = $db->query('SELECT id FROM followers WHERE follower_id=:userid', array(':userid'=>$userid));
+
+                echo "{";
+                echo '"postcount":';
+                echo(sizeof($postcount)).',';
+                echo '"followercount":';
+                echo(sizeof($followercount)).',';
+                echo '"followingcount":';
+                echo(sizeof($followingcount));
+                echo "}";
+        }
+        //////////////////////////////////////////
 } else if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
         if ($_GET['url'] == "users") {
@@ -165,11 +195,16 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                                                 if(filter_var($email, FILTER_VALIDATE_EMAIL)){
 
                                                         if(!$db->query('SELECT email FROM users WHERE email=:email', array(':email'=>$email))){
-                                                                $db->query('INSERT INTO users VALUES(\'\', :username, :password, :email, \'0\', \'\')', array(':username'=>$username, ':password'=>password_hash($password, PASSWORD_BCRYPT), ':email'=>$email));
+                                                                $db->query('INSERT INTO users VALUES(\'\', :username, :password, :email, \'0\', "https://i.imgur.com/ml86Eqw.jpg")', array(':username'=>$username, ':password'=>password_hash($password, PASSWORD_BCRYPT), ':email'=>$email));
                                                                 echo '{ "Success": "User Created" }';
                                                                 http_response_code(200);
                                                                 ///email
                                                                 Mail::sendMail('Welcome to LOLZCATZ U WONT REGRET IT', 'Your account has been created homeslice', $email);
+                                                                $cstrong = True;
+                                                                $token = bin2hex(openssl_random_pseudo_bytes(64, $cstrong));
+                                                                $user_id = $db->query('SELECT id FROM users WHERE username=:username', array(':username'=>$username))[0]['id'];
+                                                                $db->query('INSERT INTO login_tokens VALUES (\'\', :token, :user_id)', array(':token'=>sha1($token), ':user_id'=>$user_id));
+                                                                echo '{ "Token": "'.$token.'" }';
                                                                 setcookie("LOLID", $token, time() + 60 * 60 * 24 * 7, '/', NULL, NULL, TRUE);
                                                                 setcookie("LOLID_", '1', time() + 60 * 60 * 24 * 3, '/', NULL, NULL, TRUE);
 
@@ -282,7 +317,15 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         }
                         
                 }
+
+                $followercount = $db->query('SELECT id FROM followers WHERE user_id=:userid', array(':userid'=>$userid));
+
+                echo "{";
+                echo '"followercount":';
+                echo(sizeof($followercount)).',';
+                echo '"isfollowing":';
                 echo $isFollowing;
+                echo "}";
         } 
         ////////////////
 }  else if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
@@ -300,6 +343,19 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         echo '{ "Error": "Malformed request" }';
                         http_response_code(400);
                 }
+        ///////////////deleting posts////////////////////////
+        }else if ($_GET['url'] == "postdelete") {
+                $candelete = "0";
+
+                $userid = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($_COOKIE['LOLID'])))[0]['user_id'];
+
+                if ($db->query('SELECT id FROM posts WHERE id=:postid and user_id=:userid', array(':postid'=>$_GET['id'], ':userid'=>$userid))) {
+                        $db->query('DELETE FROM posts WHERE id=:postid', array(':postid'=>$_GET['id']));
+                        $db->query('DELETE FROM post_likes WHERE post_id=:postid', array(':postid'=>$_GET['id']));
+                        $db->query('DELETE FROM comments WHERE post_id=:postid', array(':postid'=>$_GET['id']));
+                        $candelete = "1";
+                }
+                echo $candelete;
         }
 } else {
         http_response_code(405);
