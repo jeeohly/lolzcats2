@@ -78,6 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $likerId = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($token)))[0]['user_id'];
                 //////////////////////////////
                 $profpic = "";
+                $deletereport = "report";
+
                 $response = "[";
                 foreach($followingposts as $post){
                         /////////STUFF TO GET UNLIKE DISPLAY//////////////////
@@ -86,6 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                                 $isliked = " Likes";
                         }else{
                                 $isliked = " Unlike";
+                        }
+                        if($db->query('SELECT user_id FROM posts WHERE id=:postid AND user_id=:userid', array(':postid'=>$postId, ':userid'=>$likerId))){
+                                $deletereport = "delete";
                         }
                         ////////////////////////////PROF PIC////////////////
                         $profpic = $db->query('SELECT profileimg FROM users WHERE id=:userid', array(':userid'=>$post['user_id']))[0]['profileimg'];
@@ -99,6 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                                 $response .= '"PostImage": "'.$post['postimg'].'",';
                                 $response .= '"isLiked": "'.$isliked.'",';
                                 $response .= '"Profpic": "'.$profpic.'",';
+                                $response .= '"Deletereport": "'.$deletereport.'",';
                                 $response .= '"Likes": '.$post['likes'].'';
                         $response .= "},";
 

@@ -396,12 +396,12 @@ if(isset($_GET['username'])){
 	              	if('<?php echo $profimg; ?>'){
 					    $('.profpicdisplay').html(
 					        $('.profpicdisplay').html() +
-					        	'<img src="" data-tempsrc="<?php echo $profimg; ?>" class="postimg" style="border:1px solid #ccc;border-radius: 50%;width:100%;display:block;margin-right:auto;margin-left:auto;border-radius: 50%;object-fit:cover;width:150px;height:150px;margin-bottom:10px">'
+					        	'<img src="" data-tempsrc="<?php echo $profimg; ?>" class="postimg" style="border:1px solid #ccc;border-radius: 50%;width:100%;display:block;margin-right:auto;margin-left:auto;border-radius: 50%;object-fit:cover;width:150px;height:150px;margin-bottom:5px">'
 					    )
 					}else{
 						$('.profpicdisplay').html(
 					        $('.profpicdisplay').html() +
-					        	'<img src="" data-tempsrc="https://i.imgur.com/ml86Eqw.jpg" class="postimg" style="border:1px solid #ccc;border-radius: 50%;width:100%;display:block;margin-right:auto;margin-left:auto;border-radius: 50%;object-fit:cover;width:150px;height:150px;">'
+					        	'<img src="" data-tempsrc="https://i.imgur.com/ml86Eqw.jpg" class="postimg" style="border:1px solid #ccc;border-radius: 50%;width:100%;display:block;margin-right:auto;margin-left:auto;border-radius: 50%;object-fit:cover;width:150px;height:150px;margin-bottom:5px">'
 					    )
 					}
 				    $('.postimg').each(function(){
@@ -435,7 +435,7 @@ if(isset($_GET['username'])){
                        	}else{
                        		$('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<div style="margin-bottom:10px;"><li class="list-group-item"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postimg" id="img'+posts[index].postId+'" style="border:1px solid #ccc;border-radius: 50%;object-fit:cover;width:40px;height:40px;margin-bottom:0px;margin-right:10px;">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></li><li class="list-group-item" id="'+posts[index].PostId+'"><p class="mb-1">'+posts[index].PostBody+'</p><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postimg" id="img'+posts[index].postId+'" style="border-radius:4px;border:1px solid #ccc;margin-bottom:0px"></li><button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(255,255,255);color:rgb(33,37,41);width:50%;" onclick="showCommentsModal()">Comment</button></div>'
+	                            '<div style="margin-bottom:10px;"><li class="list-group-item"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postimg" id="img'+posts[index].postId+'" style="border:1px solid #ccc;border-radius: 50%;object-fit:cover;width:40px;height:40px;margin-bottom:0px;margin-right:10px;">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></li><li class="list-group-item" id="'+posts[index].PostId+'"><p class="mb-1">'+posts[index].PostBody+'</p></li><div style="background-color:rgb(255,255,255)"><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postimg" id="img'+posts[index].postId+'" style="border-radius:4px;border:1px solid #ccc;margin-bottom:0px;width:100%;max-height:500px;object-fit:cover;"></div><button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(255,255,255);color:rgb(33,37,41);width:50%;" onclick="showCommentsModal()">Comment</button></div>'
 	                        )
 
                        	}
