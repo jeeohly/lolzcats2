@@ -99,7 +99,7 @@ if(isset($_GET['username'])){
 <!---------------------->
 
 <!DOCTYPE html>
-<html style="background-color:rgb(241,247,252);">
+<html style="background-color:rgb(245,246,250);">
 
 <head>
     <meta charset="utf-8">
@@ -116,9 +116,9 @@ if(isset($_GET['username'])){
     <link rel="stylesheet" href="assets/css/untitled.css">
 </head>
 
-<body style="background-color:rgb(241,247,252);">
+<body style="background-color:#f1f7fc">
     <nav class="navbar navbar-light navbar-expand-md navigation-clean-search" style="background-color:rgb(255,255,255);">
-        <div class="container"><a class="navbar-brand" href="#"><img src="assets/img/lolzcatz logo 2.png" style="width:100px;background-color:none;"></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container"><a class="navbar-brand" href="#"><img src="assets/img/lolzcatz logo 1.png" style="width:50px;background-color:none;"></a><button class="navbar-toggler" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div
                 class="collapse navbar-collapse" id="navcol-1">
                 <form class="form-inline mr-auto" target="_self">
@@ -165,24 +165,32 @@ if(isset($_GET['username'])){
    					<div class="followbutton">
     					
     				</div>
-    				<!-------------------------->
-    				<li class="list-group-item" style="height:70px;display:inline-block;float:left;margin-bottom:10px;width:33.333%;"><p align="center" class="mb-0" style="font-size:12px;">Posts</p>
-    					<div class="postcount"></div>
-    				</li>
-    				<li class="list-group-item" style="height:70px;display:inline-block;float:left;margin-bottom:10px;width:33.333%;"><p align="center" class="mb-0" style="font-size:12px;">Followers</p>
-    					<div class="followercount"></div>
-    				</li>
-    				<li class="list-group-item" style="height:70px;display:inline-block;float:left;margin-bottom:10px;width:33.333%;"><p align="center" class="mb-0" style="font-size:12px;">Following</p>
-    					<div class="followingcount"></div>
-    				</li>
-    				
-   					
-    				<li class="list-group-item" style="margin-bottom:10px;width:100%;display:inline-block;"><p class="mb-0" style="font-weight:600;font-size:20px;color:rgb(255,110,199);">About me</p><p class="mb-0">this is what i like and the shit i dont like lmao</p></li>
+
+    				<!--------------------stats------>
+	    			<div class="lolzbox2" style="height:55px">
+		    			<div class="stat"><p align="center" class="mb-0" style="font-size:12px;">Posts</p>
+		    				<div class="postcount" style="color:rgb(255,110,199);"></div>
+		    			</div>
+		    			<div class="stat"><p align="center" class="mb-0" style="font-size:12px;">Followers</p>
+		    				<div class="followercount" style="color:rgb(255,110,199);"></div>
+		    			</div>
+		    			<div class="stat"><p align="center" class="mb-0" style="font-size:12px;">Following</p>
+		    				<div class="followingcount" style="color:rgb(255,110,199);"></div>
+		    			</div>
+	   				</div>
+
+
+    				<div class="lolzbox"><div class="subheader">About me</div><p class="mb-0">this is what i like and the shit i dont like lmao</p></div>
 
     			</div>
 
    				
    					<div class="col-xl-6">
+
+   						<div class="newpost">
+	                    <!----------new post button--------------->
+	                    
+	                	</div>
    					
    						<div class="timelineposts">
    						<!-----------posts--------->
@@ -190,10 +198,7 @@ if(isset($_GET['username'])){
                     
               		</div>
               	<div class="col-xl-3">
-	               	<div class="newpost">
-	                    <!----------new post button--------------->
-	                    
-	                </div>
+	               	
 	            </div>
             </div>
         </div>
@@ -217,7 +222,7 @@ if(isset($_GET['username'])){
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">New Post</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                    <h4 class="modal-title">New Post</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close" style="outline:none;"><span aria-hidden="true">×</span></button></div>
                 <div style="max-height: 400px; overflow-y: auto">
                     <form action="profile.php?username=<?php echo $username; ?>" method="post" enctype="multipart/form-data">
                   
@@ -233,7 +238,10 @@ if(isset($_GET['username'])){
 						</div>
 					
 	                </div>
-	                <div class="modal-footer"><button class="btn btn-light" type="submit" name="post" value="post" style="display:block;background-color:rgb(0,127,255);color:rgb(255,255,255);margin-right:5px;">Post</button><button class="btn btn-light" type="button" data-dismiss="modal" style="display:block;background-color:rgb(255,110,199);color:rgb(255,255,255)">Close</button></div>
+	                <div class="modal-footer" style="padding:5px;">
+	                	<button type="submit" name="post" value="post" style="display:inline-block;background-color:rgb(0,127,255);color:rgb(255,255,255);width:50%;">Post</button>
+	                	<button type="button" data-dismiss="modal" style="display:inline-block;background-color:rgb(255,110,199);color:rgb(255,255,255);width:50%;">Close</button>
+	                </div>
 	                </form>
             </div>
         </div>
@@ -337,7 +345,7 @@ if(isset($_GET['username'])){
 			        if(r == '<?php echo $username; ?>'){
 				        $('.newpost').html(
 					        $('.newpost').html() +
-					            '<button class="btn btn-primary" type="button" style="display:block;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%;" onclick="showNewPostModal()">New post</button>'
+					            '<button class="btn btn-primary" type="button" style="margin-bottom:10px;display:block;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%;" onclick="showNewPostModal()">New post</button>'
 				        )
 				    ////////////following stuff///////////////////
 			        }else{
@@ -430,12 +438,12 @@ if(isset($_GET['username'])){
                     	if(posts[index].PostImage == ""){
 	                        $('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<div style="margin-bottom:10px;"><div style="background-color:rgb(255,255,255);padding-right:15px;padding-left:10px;padding-top:10px;border:1px solid #ccc;border-bottom: none;border-top-left-radius:4px;border-top-right-radius:4px;"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postimg" id="img'+posts[index].postId+'" style="border:1px solid #ccc;border-radius: 50%;object-fit:cover;width:45px;height:45px;margin-bottom:0px;margin-right:10px;">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div style="padding-left:10px;padding-right:10px;padding-bottom:5px;border:1px solid #ccc;border-bottom:none;border-top:none;background-color:rgb(255,255,255);word-wrap:break-word;font-size:16px;"><p class="mb-0">'+posts[index].PostBody+'</p></div><button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);" onclick="showCommentsModal()">Comment</button></div>'
+	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div class="postfooter"><button class="postbutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="postbutton" data-postid="'+posts[index].PostId+'" type="button" onclick="showCommentsModal()">Comment</button></div></div>'
                         	)
                        	}else{
                        		$('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<div style="margin-bottom:10px;"><div style="background-color:rgb(255,255,255);padding-right:15px;padding-left:10px;padding-top:10px;border:1px solid #ccc;border-bottom: none;border-top-left-radius:4px;border-top-right-radius:4px;"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postimg" id="img'+posts[index].postId+'" style="border:1px solid #ccc;border-radius: 50%;object-fit:cover;width:45px;height:45px;margin-bottom:0px;margin-right:10px;">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div style="padding-left:10px;padding-right:10px;padding-bottom:5px;border:1px solid #ccc;border-bottom:none;border-top:none;background-color:rgb(255,255,255);font-size:16px;"><p class="mb-0">'+posts[index].PostBody+'</p></div><div style="background-color:rgb(255,255,255)"><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postimg" id="img'+posts[index].postId+'" style="border:1px solid #ccc;margin-bottom:0px;width:100%;max-height:500px;object-fit:cover;"></div><button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="width:50%;background-color:rgb(255,255,255);color:rgb(33,37,41);">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(255,255,255);color:rgb(33,37,41);width:50%;" onclick="showCommentsModal()">Comment</button></div>'
+	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div style="background-color:rgb(255,255,255)"><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postpic" id="img'+posts[index].postId+'"></div><div class="postfooter"><button class="postbutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="postbutton" data-postid="'+posts[index].PostId+'" type="button" onclick="showCommentsModal()">Comment</button></div></div>'
 	                        )
 
                        	}
@@ -499,6 +507,7 @@ if(isset($_GET['username'])){
                                 	console.log(r);
                                 	if(r == "1"){
                                 		window.open("profile.php?username=<?php echo $username; ?>", "_self");
+
                                 	}
                                 }
                         	})
@@ -512,7 +521,22 @@ if(isset($_GET['username'])){
 						}
 					})
 
-                    scrollToAnchor(location.hash)
+					$('.postprofile').each(function(){
+						this.src=$(this).attr('data-tempsrc')
+						this.onload = function(){
+							this.style.opacity = '1';
+						}
+					})
+
+					$('.postpic').each(function(){
+						this.src=$(this).attr('data-tempsrc')
+						this.onload = function(){
+							this.style.opacity = '1';
+						}
+					})
+
+					scrollToAnchor(location.hash);
+
                 },
                 error: function(r) {
                     console.log(r)
