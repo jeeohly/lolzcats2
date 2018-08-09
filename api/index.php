@@ -128,6 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 $token = $_COOKIE['LOLID'];
                 $likerId = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($token)))[0]['user_id'];
 
+                $userpic = $db->query('SELECT profileimg FROM users WHERE id=:userid', array(':userid'=>$likerId))[0]['profileimg'];
                 //////////////////////////////
                 $profpic = "";
                 $deletereport = "report";
@@ -156,6 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                                 $response .= '"isLiked": "'.$isliked.'",';
                                 $response .= '"Profpic": "'.$profpic.'",';
                                 $response .= '"Deletereport": "'.$deletereport.'",';
+                                $response .= '"Userpic": "'.$userpic.'",';
                                 $response .= '"Likes": '.$post['likes'].'';
                         $response .= "},";
 

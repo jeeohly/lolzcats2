@@ -238,7 +238,7 @@ if(isset($_GET['username'])){
 						</div>
 					
 	                </div>
-	                <div class="modal-footer" style="padding:5px;">
+	                <div class="modal-footer">
 	                	<button type="submit" name="post" value="post" style="display:inline-block;background-color:rgb(0,127,255);color:rgb(255,255,255);width:50%;">Post</button>
 	                	<button type="button" data-dismiss="modal" style="display:inline-block;background-color:rgb(255,110,199);color:rgb(255,255,255);width:50%;">Close</button>
 	                </div>
@@ -258,15 +258,13 @@ if(isset($_GET['username'])){
     	$('html,body').animate({scrollTop: aTag.offset().top}, 'slow');
     }
         $(document).ready(function() {
-
+        	/////////disabling enter button////
         	$('textarea').keypress(function(event) {
 
 			    if (event.keyCode == 13) {
 			        event.preventDefault();
 			    }
 			});
-
-			
 
         	$('.sbox').keyup(function() {
                 $('.autocomplete').html("")
@@ -282,11 +280,16 @@ if(isset($_GET['username'])){
                         r = JSON.parse(r)
 
                         for(var i = 0; i < r.length; i++){
-                            console.log(r[i].body)
+                            //console.log(r[i].body)
                             $('.autocomplete').html(
                                 $('.autocomplete').html() + 
                                 '<a href="profile.php?username='+r[i].username+'#'+r[i].id+'"><li class="list-group-item"><span>'+r[i].body+'</span></li></a>'
                             )
+                        }
+                        if ( $('input.sbox').hasClass('active') ) {
+                        	console.log('1')
+                        }else{
+                        	console.log('0')
                         }
                     },
                     error: function(r){
@@ -438,17 +441,32 @@ if(isset($_GET['username'])){
                     	if(posts[index].PostImage == ""){
 	                        $('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div class="postfooter"><button class="postbutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="postbutton" data-postid="'+posts[index].PostId+'" type="button" onclick="showCommentsModal()">Comment</button></div></div>'
+	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div class="postfooter"><button class="likebutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button" onclick="showCommentsModal()">Comment</button></div><div class="commentbox"><div class="commentbubble"><textarea class="commentinput" comment-id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
                         	)
                        	}else{
                        		$('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div style="background-color:rgb(255,255,255)"><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postpic" id="img'+posts[index].postId+'"></div><div class="postfooter"><button class="postbutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="postbutton" data-postid="'+posts[index].PostId+'" type="button" onclick="showCommentsModal()">Comment</button></div></div>'
+	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div style="background-color:rgb(255,255,255)"><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postpic" id="img'+posts[index].postId+'"></div><div class="postfooter"><button class="likebutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button" onclick="showCommentsModal()">Comment</button></div><div class="commentbox"><div class="commentbubble"><textarea class="commentinput" comment-id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
 	                        )
 
                        	}
                             //'<blockquote class="blockquote" style="background-color:rgb(255,255,255); display: block;padding-left: 30px;width: 60%;margin-right: auto;margin-left: auto;">'+posts[index].PostBody+'</p><footer class="blockquote-footer">'+posts[index].PostedBy+', '+posts[index].PostDate+' &nbsp;&nbsp;<button class="btn btn-primary btn-sm" data-id="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);">'+posts[index].Likes+' Likes</button><button class="btn btn-primary btn-sm" data-postid="'+posts[index].PostId+'" type="button" style="background-color:rgb(0,127,255);margin:5px;">Comment</button>&nbsp;&nbsp;</footer></blockquote>'
-                        
+
+                        //////TEXT AREA EXPAND////////////
+    					$(document)
+						    .one('focus.commentinput', 'textarea.commentinput', function(){
+						        var savedValue = this.value;
+						        this.value = '';
+						        this.baseScrollHeight = this.scrollHeight;
+						        this.value = savedValue;
+						    })
+						    .on('input.commentinput', 'textarea.commentinput', function(){
+						        var minRows = this.getAttribute('data-min-rows')|0, rows;
+						        this.rows = minRows;
+						        rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 22);
+						        this.rows = minRows + rows;
+					    	});		
+					    ////////////////////////////
 
                         $('[data-postid]').click(function(){
                             var buttonid = $(this).attr('data-postid');
@@ -529,6 +547,13 @@ if(isset($_GET['username'])){
 					})
 
 					$('.postpic').each(function(){
+						this.src=$(this).attr('data-tempsrc')
+						this.onload = function(){
+							this.style.opacity = '1';
+						}
+					})
+
+					$('.userpic').each(function(){
 						this.src=$(this).attr('data-tempsrc')
 						this.onload = function(){
 							this.style.opacity = '1';

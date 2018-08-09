@@ -46,11 +46,9 @@
 }
 
 .postfooter{
-	border-bottom-left-radius:4px;
-	border-bottom-right-radius:4px;
+	display:block;
 	background-color: rgb(255,255,255);
-	border:1px solid #d9e4ec;
-	overflow:hidden;
+	overflow: auto;
 }
 
 .postpic{
@@ -61,17 +59,31 @@
 	object-fit:cover;
 }
 
-.postbutton{
+.likebutton{
 	width:50%;
 	color:rgb(33,37,41);
 	font-size: 14px;
 	font-weight: 400;
 	background-color: rgb(255,255,255);
+	border-right:none !important;
 	padding: 5px;
-	border:none !important;
 }
 
-.postbutton:hover{
+.commentbutton{
+	width:50%;
+	color:rgb(33,37,41);
+	font-size: 14px;
+	font-weight: 400;
+	background-color: rgb(255,255,255);
+	border-left:none !important;
+	padding: 5px;
+}
+
+.likebutton:hover{
+	background-color: #d9e4ec;
+}
+
+.commentbutton:hover{
 	background-color: #d9e4ec;
 }
 
@@ -111,6 +123,50 @@
 
 .stat:hover{
 	background-color: #d9e4ec;
+}
+
+.commentbox{
+	display:block;
+	overflow: hidden;
+	background-color:rgb(255,255,255);
+	border-bottom-right-radius:4px;
+	border-bottom-left-radius:4px;
+	border:1px solid #d9e4ec;
+	border-top:none;
+	padding:10px;
+}
+
+.commentbubble{ 
+	border-radius:20px;
+	border:1px solid #d9e4ec;
+	background-color:rgb(241,247,252);
+	overflow:hidden;
+	width:100%;
+}
+
+.commentinput{
+	display:block;
+	box-sizing: padding-box;
+  	overflow: hidden;
+  	font-size:14px;
+	padding-left:10px;
+	padding-right:10px;
+	border:none !important;
+	resize: none;
+	width:100%;
+	color:rgb(33,37,41);
+}
+
+.userpic{
+	opacity: 0;
+	transition: all 2s ease-out;
+
+	display:inline-block;
+	border:1px solid #d9e4ec;
+	border-radius: 50%;
+	object-fit:cover;
+	width:35px;
+	height:35px;
 }
 
 input[type="text"], textarea {
