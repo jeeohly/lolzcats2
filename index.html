@@ -152,28 +152,28 @@
                         if(posts[index].PostImage == ""){
                             $('.timelineposts').html(
                                 $('.timelineposts').html() + 
-                                '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div class="postfooter"><button class="likebutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button" onclick="showCommentsModal()">Comment</button></div><div class="commentbox"><div class="commentbubble"><textarea class="commentinput" comment-id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
+                                '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div class="postfooter"><button class="likebutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button" onclick="showCommentsModal()">Comment</button></div><div class="commentbox"><div class="commentbubble"><textarea class="commentinput" id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
                             )
                         }else{
                             $('.timelineposts').html(
                                 $('.timelineposts').html() + 
-                                '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div style="background-color:rgb(255,255,255)"><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postpic" id="img'+posts[index].postId+'"></div><div class="postfooter"><button class="likebutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button" onclick="showCommentsModal()">Comment</button></div><div class="commentbox"><div class="commentbubble"><textarea class="commentinput" comment-id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
+                                '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div style="background-color:rgb(255,255,255)"><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postpic" id="img'+posts[index].postId+'"></div><div class="postfooter"><button class="likebutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button" onclick="showCommentsModal()">Comment</button></div><div class="commentbox"><div class="commentbubble"><textarea class="commentinput" id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
                             )
                         }
 
                         //////TEXT AREA EXPAND////////////
                         $(document)
                             .one('focus.commentinput', 'textarea.commentinput', function(){
-                                var savedValue = this.value;
-                                this.value = '';
-                                this.baseScrollHeight = this.scrollHeight;
-                                this.value = savedValue;
+                                var savedValue = document.getElementById(posts[index].PostId).value;
+                                document.getElementById(posts[index].PostId).value = '';
+                                document.getElementById(posts[index].PostId).baseScrollHeight = document.getElementById(posts[index].PostId).scrollHeight;
+                                document.getElementById(posts[index].PostId).value = savedValue;
                             })
                             .on('input.commentinput', 'textarea.commentinput', function(){
-                                var minRows = this.getAttribute('data-min-rows')|0, rows;
-                                this.rows = minRows;
-                                rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 22);
-                                this.rows = minRows + rows;
+                                var minRows = document.getElementById(posts[index].PostId).getAttribute('data-min-rows')|0, rows;
+                                document.getElementById(posts[index].PostId).rows = minRows;
+                                rows = Math.ceil((document.getElementById(posts[index].PostId).scrollHeight - document.getElementById(posts[index].PostId).baseScrollHeight) / 22);
+                                document.getElementById(posts[index].PostId).rows = minRows + rows;
                             });     
                         ////////////////////////////
 
