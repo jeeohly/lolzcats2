@@ -132,6 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 //////////////////////////////
                 $profpic = "";
                 $deletereport = "report";
+                $commentcount = "";
 
                 $response = "[";
                 foreach($followingposts as $post){
@@ -147,7 +148,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         }
                         ////////////////////////////PROF PIC////////////////
                         $profpic = $db->query('SELECT profileimg FROM users WHERE id=:userid', array(':userid'=>$post['user_id']))[0]['profileimg'];
-                        //////////////////////////////////////
+                        ///////////////////////////////////////////////////
+                        $commentcount = sizeof($db->query('SELECT comments.comment, users.username FROM comments, users WHERE post_id=:postid AND comments.user_id=users.id', array(':postid'=>$post['id'])));
+
                         $response .= "{";
                                 $response .= '"PostId": '.$post['id'].',';
                                 $response .= '"PostBody": "'.$post['body'].'",';
@@ -158,6 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                                 $response .= '"Profpic": "'.$profpic.'",';
                                 $response .= '"Deletereport": "'.$deletereport.'",';
                                 $response .= '"Userpic": "'.$userpic.'",';
+                                $response .= '"commentcount": '.$commentcount.',';
                                 $response .= '"Likes": '.$post['likes'].'';
                         $response .= "},";
 
@@ -183,8 +187,22 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 echo '"followingcount":';
                 echo(sizeof($followingcount));
                 echo "}";
+        }else if ($_GET['url'] == "comments") {
+        //////comments///////////////////
+                $postId = $_GET['id'];
+                $comments = $db->query('SELECT comments.comment, users.username FROM comments, users WHERE post_id=:postid AND comments.user_id=users.id ORDER BY comments.posted_at DESC;', array(':postid'=>$postId));
+
+                $response = "[";
+                foreach($comments as $comment){
+                        $response .= "{";
+                                $response .= '"commentbody": "'.$comment['comment'].'",';    
+                                $response .= '"commentBy": "'.$comment['username'].'"';
+                        $response .= "},";
+                }
+                $response = substr($response, 0, strlen($response)-1);
+                $response .= "]";
+                echo $response;
         }
-        //////////////////////////////////////////
 } else if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
         if ($_GET['url'] == "users") {
