@@ -190,12 +190,17 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         }else if ($_GET['url'] == "comments") {
         //////comments///////////////////
                 $postId = $_GET['id'];
-                $comments = $db->query('SELECT comments.comment, users.username FROM comments, users WHERE post_id=:postid AND comments.user_id=users.id ORDER BY comments.posted_at DESC;', array(':postid'=>$postId));
-
+                $comments = $db->query('SELECT comments.id, comments.user_id, comments.comment, users.username FROM comments, users WHERE post_id=:postid AND comments.user_id=users.id ORDER BY comments.posted_at DESC;', array(':postid'=>$postId));
+                
                 $response = "[";
                 foreach($comments as $comment){
+
+                        $commentprofpic = $db->query('SELECT profileimg FROM users WHERE id=:user_id', array(':user_id'=>$comment['user_id']))[0]['profileimg'];
+
                         $response .= "{";
-                                $response .= '"commentbody": "'.$comment['comment'].'",';    
+                                $response .= '"commentbody": "'.$comment['comment'].'",';
+                                $response .= '"commentprofpic": "'.$commentprofpic.'",'; 
+                                $response .= '"commentid": "'.$comment['id'].'",';       
                                 $response .= '"commentBy": "'.$comment['username'].'"';
                         $response .= "},";
                 }
