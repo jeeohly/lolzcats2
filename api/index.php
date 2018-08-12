@@ -95,6 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         ////////////////////////////PROF PIC////////////////
                         $profpic = $db->query('SELECT profileimg FROM users WHERE id=:userid', array(':userid'=>$post['user_id']))[0]['profileimg'];
                         //////////////////////////////////////
+                        $userpic = $db->query('SELECT profileimg FROM users WHERE id=:userid', array(':userid'=>$likerId))[0]['profileimg'];
+
                         $response .= "{";
 
                                 $response .= '"PostId": '.$post['id'].',';
@@ -105,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                                 $response .= '"isLiked": "'.$isliked.'",';
                                 $response .= '"Profpic": "'.$profpic.'",';
                                 $response .= '"Deletereport": "'.$deletereport.'",';
+                                $response .= '"Userpic": "'.$userpic.'",';
                                 $response .= '"Likes": '.$post['likes'].'';
                         $response .= "},";
 
@@ -204,8 +207,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                                 $response .= '"commentBy": "'.$comment['username'].'"';
                         $response .= "},";
                 }
+      
                 $response = substr($response, 0, strlen($response)-1);
                 $response .= "]";
+
                 echo $response;
         }
 } else if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -357,8 +362,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 echo '"isfollowing":';
                 echo $isFollowing;
                 echo "}";
-        } 
-        ////////////////
+        } else if ($_GET['url'] == "comment"){
+        }
+        ////////////////////////////
 }  else if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
         if ($_GET['url'] == "auth") {
                 if (isset($_GET['token'])) {

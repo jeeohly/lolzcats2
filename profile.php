@@ -268,7 +268,6 @@ if(isset($_GET['username'])){
 
         	$('.sbox').keyup(function() {
                 $('.autocomplete').html("")
-
                 $.ajax({
                 
                     type: "GET",
@@ -278,26 +277,22 @@ if(isset($_GET['username'])){
                     data: '',
                     success: function(r) {
                         r = JSON.parse(r)
-
-                        for(var i = 0; i < r.length; i++){
-                            //console.log(r[i].body)
-                            $('.autocomplete').html(
-                                $('.autocomplete').html() + 
-                                '<a href="profile.php?username='+r[i].username+'#'+r[i].id+'"><li class="list-group-item"><span>'+r[i].body+'</span></li></a>'
-                            )
-                        }
-                        if ( $('input.sbox').hasClass('active') ) {
-                        	console.log('1')
-                        }else{
-                        	console.log('0')
-                        }
+						for(var i = 0; i < r.length; i++){
+	                        //console.log(r[i].body)
+	                        $('.autocomplete').html(
+	                            $('.autocomplete').html() + 
+	                            '<a href="profile.php?username='+r[i].username+'#'+r[i].id+'"><li class="list-group-item"><span>'+r[i].body+'</span></li></a>'
+	                        )
+	                    }		
                     },
                     error: function(r){
                         console.log(r)
                     }
                 })
             })
-
+            $('.sbox').blur(function() {
+            	$('.autocomplete').html("")
+            })
             /////////////////////MY STUFF//////////////////
 
             ///////////////////stats////////////////
@@ -441,12 +436,12 @@ if(isset($_GET['username'])){
                     	if(posts[index].PostImage == ""){
 	                        $('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div class="postfooter"><button class="likebutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button">Comment</button></div><div class="commentbox"><div class="commentbubble"><textarea class="commentinput" id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div><div class="commentpostsbox" comment-id="'+posts[index].PostId+'"></div></div>'
+	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div class="postfooter"><button class="likebutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button">'+posts[index].commentcount+' Comments</button></div><div class="commentbox"><img src="'+posts[index].Userpic+'" class="userpic"><div class="commentbubble"><textarea class="commentinput" id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div><div class="commentpostsbox" comment-id="'+posts[index].PostId+'"></div></div>'
                         	)
                        	}else{
                        		$('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div style="background-color:rgb(255,255,255)"><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postpic" id="img'+posts[index].postId+'"></div><div class="postfooter"><button class="likebutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button">Comment</button></div><div class="commentbox"><div class="commentbubble"><textarea class="commentinput" id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div><div class="commentpostsbox" comment-id="'+posts[index].PostId+'"></div></div>'
+	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div style="background-color:rgb(255,255,255)"><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postpic" id="img'+posts[index].postId+'"></div><div class="postfooter"><button class="likebutton" data-id="'+posts[index].PostId+'" type="button">'+posts[index].Likes+''+posts[index].isLiked+'</button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button">'+posts[index].commentcount+' Comments</button></div><div class="commentbox"><img src="'+posts[index].Userpic+'" class="userpic"><div class="commentbubble"><textarea class="commentinput" id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div><div class="commentpostsbox" comment-id="'+posts[index].PostId+'"></div></div>'
 	                        )
 
                        	}
@@ -462,7 +457,7 @@ if(isset($_GET['username'])){
 				                    var comments = JSON.parse(r)
 				                    $.each(comments, function(index2){
 				                    	$("[comment-id='"+posts[index].PostId+"']").html(
-		                            		$("[comment-id='"+posts[index].PostId+"']").html() + '<a href="profile.php?username='+comments[index2].commentBy+'" style="font-weight:500;"><img src="https://i.imgur.com/fG8QJgF.png" class="userpic"><div class="commentbubbleposts"><div class="commenttext">'+comments[index2].commentBy+'</a> '+comments[index2].commentbody+'</div></div><br>'
+		                            		$("[comment-id='"+posts[index].PostId+"']").html() + '<a href="profile.php?username='+comments[index2].commentBy+'" style="font-weight:500;"><img src="'+comments[index2].commentprofpic+'" class="userpic"><div class="commentbubbleposts"><div class="commenttext">'+comments[index2].commentBy+'</a> '+comments[index2].commentbody+'</div></div><br>'
 		                            	)
 				                    })
 				                }
@@ -484,26 +479,17 @@ if(isset($_GET['username'])){
 						        rows = Math.ceil((document.getElementById(posts[index].PostId).scrollHeight - document.getElementById(posts[index].PostId).baseScrollHeight) / 22);
 						        document.getElementById(posts[index].PostId).rows = minRows + rows;
 					    	});		
-					    ////////////////////////////
-
+					    /////////////////COMMENT INPUT//////////////////
                         $('[data-postid]').click(function(){
                             var buttonid = $(this).attr('data-postid');
-                             $.ajax({
-                                type: "GET",
-                                url: "api/comments?postid=" + $(this).attr('data-postid'),
-                                processData: false,
-                                contentType: "application/json",
-                                data: '',
-                                success: function(r){
-                                    var res = JSON.parse(r)
-                                    showCommentsModal(res);
-                                },
-                                error: function(r){
-                                    console.log(r);
-                                }
-
-                            });
+                            document.getElementById(buttonid).focus();
                         });
+                        $('[id]').keypress(function(event) {
+							if (event.keyCode == 13) {
+							    event.preventDefault();
+							}
+						});
+                        ///////////////////////////////
 
                         $('[data-id]').click(function(){
                             var buttonid = $(this).attr('data-id');
@@ -549,13 +535,6 @@ if(isset($_GET['username'])){
                         	})
                        	})
                     })
-
-					$('.postimg').each(function(){
-						this.src=$(this).attr('data-tempsrc')
-						this.onload = function(){
-							this.style.opacity = '1';
-						}
-					})
 
 					$('.postprofile').each(function(){
 						this.src=$(this).attr('data-tempsrc')
