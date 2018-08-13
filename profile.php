@@ -123,7 +123,7 @@ if(isset($_GET['username'])){
                 class="collapse navbar-collapse" id="navcol-1">
                 <form class="form-inline mr-auto" target="_self">
 
-                    <div class="searchbox"><i class="glyphicon glyphicon-search"></i>
+                    <div class="searchbox">
                         <input class="form-control sbox" type="text" placeholder="search posts...">
                         <ul class="list-group autocomplete" style="word-wrap:break-word;position:absolute;width:200px;z-index:100">
                             
@@ -265,34 +265,36 @@ if(isset($_GET['username'])){
 			        event.preventDefault();
 			    }
 			});
-
+        	///////////////////////search////////////////////
         	$('.sbox').keyup(function() {
-                $('.autocomplete').html("")
-                $.ajax({
-                
-                    type: "GET",
-                    url: "api/search?query=" + $(this).val(),
-                    processData: false,
-                    contentType: "application/json",
-                    data: '',
-                    success: function(r) {
-                        r = JSON.parse(r)
-						for(var i = 0; i < r.length; i++){
-	                        //console.log(r[i].body)
-	                        $('.autocomplete').html(
-	                            $('.autocomplete').html() + 
-	                            '<a href="profile.php?username='+r[i].username+'#'+r[i].id+'"><li class="list-group-item"><span>'+r[i].body+'</span></li></a>'
-	                        )
-	                    }		
-                    },
-                    error: function(r){
-                        console.log(r)
-                    }
-                })
+                $('.autocomplete').html("");
+
+                if(1){
+	                $.ajax({
+	                    type: "GET",
+	                    url: "api/search?query=" + $(this).val(),
+	                    processData: false,
+	                    contentType: "application/json",
+	                    data: '',
+	                    success: function(r) {
+	                        r = JSON.parse(r)
+							for(var i = 0; i < r.length; i++){
+		                        //console.log(r[i].body)
+		                        $('.autocomplete').html(
+		                            $('.autocomplete').html() + 
+		                            '<a href="profile.php?username='+r[i].username+'#'+r[i].id+'"><li class="list-group-item"><span>'+r[i].body+'</span></li></a>'
+		                        )
+		                    }		
+	                    },
+	                    error: function(r){
+	                        console.log(r)
+	                    }
+	                })
+            	}
             })
-            $('.sbox').blur(function() {
-            	$('.autocomplete').html("")
-            })
+        	$(document).click(function(event){
+        		$('.autocomplete').html('')
+        	})
             /////////////////////MY STUFF//////////////////
 
             ///////////////////stats////////////////
