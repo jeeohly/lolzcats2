@@ -342,8 +342,21 @@ if(isset($_GET['username'])){
 				        )
 				        $('.composepost').html(
 				        	$('.composepost').html() + 
-				        		'<div style="margin-bottom:10px;"><div class="postheader"><textarea class="postinput" rows="1" data-min-rows="1" style="padding-bottom:10px;" placeholder="What u wanna say? XD"></textarea></div><button class="uploadbutton" type="button"><img src="assets/img/image.png" class="icon"><div class="buttontext">Upload pic</div></button><button class="postbutton" type="button"><img src="assets/img/post.png" class="icon"><div class="buttontext">Post</div></button></div>'
+				        		'<div style="margin-bottom:10px;"><div class="postheader"><textarea id="postinput" class="postinput" rows="1" data-min-rows="1" style="padding-bottom:10px;" placeholder="What u wanna say? XD"></textarea></div><button class="uploadbutton" type="button"><img src="assets/img/image.png" class="icon"><div class="buttontext">Upload pic</div></button><button class="postbutton" type="button"><img src="assets/img/post.png" class="icon"><div class="buttontext">Post</div></button></div>'
 				        )
+    					$(document)
+						    .one('focus.postinput', 'textarea.postinput', function(){
+						        var savedValue = document.getElementById('postinput').value;
+						        document.getElementById('postinput').value = '';
+						        document.getElementById('postinput').baseScrollHeight = document.getElementById('postinput').scrollHeight;
+						        document.getElementById('postinput').value = savedValue;
+						    })
+						    .on('input.postinput', 'textarea.postinput', function(){
+						        var minRows = document.getElementById('postinput').getAttribute('data-min-rows')|0, rows;
+						        document.getElementById('postinput').rows = minRows;
+						        rows = Math.ceil((document.getElementById('postinput').scrollHeight - document.getElementById('postinput').baseScrollHeight) / 24);
+						        document.getElementById('postinput').rows = minRows + rows;
+					    	});	
 				    ////////////following stuff///////////////////
 			        }else{
 			        	$.ajax({
@@ -435,12 +448,12 @@ if(isset($_GET['username'])){
                     	if(posts[index].PostImage == ""){
 	                        $('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div class="postfooter"><button class="likebutton" type="button" data-id="'+posts[index].PostId+'"><img src="assets/img/thumbs.png" class="icon"><div class="buttontext">'+posts[index].Likes+''+posts[index].isLiked+'</div></button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button"><img src="assets/img/comment.png" class="icon"><div class="buttontext">'+posts[index].commentcount+' Comments</div></button></div><div class="commentbox" comment-id="'+posts[index].PostId+'"><img src="'+posts[index].Userpic+'" class="userpic"><div class="commentbubble"><textarea class="commentinput" id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
+	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="reportdelete" delete-id="'+posts[index].PostId+'"><img src="assets/img/'+posts[index].Deletereport+'.png" class="icon2"></button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div class="postfooter"><button class="likebutton" type="button" data-id="'+posts[index].PostId+'"><img src="assets/img/thumbs.png" class="icon"><div class="buttonnumber">'+posts[index].Likes+'</div><div class="buttontext">'+posts[index].isLiked+'</div></button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button"><img src="assets/img/comment.png" class="icon"><div class="buttonnumber">'+posts[index].commentcount+'</div><div class="buttontext"> Comment</div></button></div><div class="commentbox" comment-id="'+posts[index].PostId+'"><img src="'+posts[index].Userpic+'" class="userpic"><div class="commentbubble"><textarea class="commentinput" id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
                         	)
                        	}else{
                        		$('.timelineposts').html(
 	                            $('.timelineposts').html() + 
-	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="btn btn-primary btn-sm" style="background-color:rgb(255,255,255);color:rgb(33,37,41);" delete-id="'+posts[index].PostId+'">'+posts[index].Deletereport+'</button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div style="background-color:rgb(255,255,255)"><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postpic" id="img'+posts[index].postId+'"></div><div class="postfooter"><button class="likebutton" type="button" data-id="'+posts[index].PostId+'"><img src="assets/img/thumbs.png" class="icon"><div class="buttontext">'+posts[index].Likes+''+posts[index].isLiked+'</div></button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button"><img src="assets/img/comment.png" class="icon"><div class="buttontext">'+posts[index].commentcount+' Comments</div></button></div><div class="commentbox" comment-id="'+posts[index].PostId+'"><img src="'+posts[index].Userpic+'" class="userpic"><div class="commentbubble"><textarea class="commentinput" id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
+	                            '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts[index].PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts[index].Profpic+'" class="postprofile" id="img'+posts[index].postId+'">'+posts[index].PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts[index].PostDate+'</p><span style="float:right;margin-top:5px;"><button class="reportdelete" delete-id="'+posts[index].PostId+'"><img src="assets/img/'+posts[index].Deletereport+'.png" class="icon2"></button></span></div><div class="postbody"><p class="mb-0">'+posts[index].PostBody+'</p></div><div style="background-color:rgb(255,255,255)"><img src="" data-tempsrc="'+posts[index].PostImage+'" class="postpic" id="img'+posts[index].postId+'"></div><div class="postfooter"><button class="likebutton" type="button" data-id="'+posts[index].PostId+'"><img src="assets/img/thumbs.png" class="icon"><div class="buttonnumber">'+posts[index].Likes+'</div><div class="buttontext">'+posts[index].isLiked+'</div></button><button class="commentbutton" data-postid="'+posts[index].PostId+'" type="button"><img src="assets/img/comment.png" class="icon"><div class="buttonnumber">'+posts[index].commentcount+'</div><div class="buttontext"> Comment</div></button></div><div class="commentbox" comment-id="'+posts[index].PostId+'"><img src="'+posts[index].Userpic+'" class="userpic"><div class="commentbubble"><textarea class="commentinput" id="'+posts[index].PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
 	                        )
 
                        	}
@@ -501,10 +514,10 @@ if(isset($_GET['username'])){
                                     var res = JSON.parse(r)
                                     console.log(res.isLiked);
                                     if(res.isLiked == "0"){
-                                    	$("[data-id='"+buttonid+"']").html('<img src="assets/img/thumbs.png" class="icon"><div class="buttontext">'+res.Likes+' Likes</div>');
+                                    	$("[data-id='"+buttonid+"']").html('<img src="assets/img/thumbs.png" class="icon"><div class="buttonnumber">'+res.Likes+'</div><div class="buttontext"> Like</div>');
                                     	console.log(r);
                                     }else if(res.isLiked == "1"){
-                                    	$("[data-id='"+buttonid+"']").html('<img src="assets/img/thumbs.png" class="icon"><div class="buttontext">'+res.Likes+' Unlike</div>');
+                                    	$("[data-id='"+buttonid+"']").html('<img src="assets/img/thumbs.png" class="icon"><div class="buttonnumber">'+res.Likes+'</div><div class="buttontext"> Unlike</div>');
                                     	console.log(r);
                                     }
                                 },

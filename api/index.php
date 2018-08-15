@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         /////////STUFF TO GET UNLIKE DISPLAY//////////////////
                         $postId = $post['id'];
                         if (!$db->query('SELECT user_id FROM post_likes WHERE post_id=:postid AND user_id=:userid', array(':postid'=>$postId, ':userid'=>$likerId))) {
-                                $isliked = " Likes";
+                                $isliked = " Like";
                         }else{
                                 $isliked = " Unlike";
                         }
