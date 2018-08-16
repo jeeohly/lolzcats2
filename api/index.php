@@ -1,6 +1,10 @@
 <?php
 require_once("DB.php");
 require_once("Mail.php");
+require_once("Image.php");
+require_once("post2.php");
+require_once("login2.php");
+
 
 $db = new DB("127.0.0.1", "lolzcatz", "root", "");
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
@@ -24,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 }
                 $posts = $db->query('SELECT posts.id, posts.body, users.username, posts.posted_at FROM posts, users WHERE users.id = posts.user_id AND posts.body LIKE :body '.$whereclause.' LIMIT 10', $paramsarray);
 
-                //echo "<pre>";
+                //$users = $db->query('SELECT users.id, users.username, users.profileimg FROM users WHERE users.username LIKE :body '.$whereclause.' LIMIT 10', $paramsarray);
+
                 echo json_encode($posts);
 
         ///////TO GET USERNAME
@@ -364,7 +369,16 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 echo '"isfollowing":';
                 echo $isFollowing;
                 echo "}";
-        } else if ($_GET['url'] == "comment"){
+        } else if ($_GET['url'] == "post"){
+
+                //if($_FILES['postimg']['size'] == 0){
+                        //post2::createPost($_GET['body'], login2::isLoggedIn(), $userid);
+                //}else{
+                        //postid = post2::createImgPost($_POST['postbody'], login2::isLoggedIn(), $userid);
+                        //Image::uploadImage('postimg', "UPDATE posts SET postimg=:postimg WHERE id=:postid", array(':postid'=>$postid));
+                //}
+                $userid = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($_COOKIE['LOLID'])))[0]['user_id'];
+                $db->query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0, \'\', \'\')', array(':postbody'=>$_GET['body'], ':userid'=>$userid));
         }
         ////////////////////////////
 }  else if ($_SERVER['REQUEST_METHOD'] == "DELETE") {

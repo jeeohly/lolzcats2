@@ -124,8 +124,8 @@ if(isset($_GET['username'])){
                 <form class="form-inline mr-auto" target="_self">
 
                     <div class="searchbox">
-                        <input class="form-control sbox" type="text" placeholder="search posts...">
-                        <ul class="list-group autocomplete" style="word-wrap:break-word;position:absolute;width:200px;z-index:100">
+                        <input class="form-control sbox" type="text" placeholder="search posts..." style="width:400px;">
+                        <ul class="list-group autocomplete" style="word-wrap:break-word;position:absolute;width:400px;z-index:100">
                             
                         </ul>
                     </div>
@@ -263,7 +263,7 @@ if(isset($_GET['username'])){
 			});
         	///////////////////////search////////////////////
         	$('.sbox').keyup(function() {
-                $('.autocomplete').html("");
+                $('.autocomplete').html('');
                 $.ajax({
                     type: "GET",
                     url: "api/search?query=" + $(this).val(),
@@ -276,9 +276,9 @@ if(isset($_GET['username'])){
 	                        //console.log(r[i].body)
 	                        $('.autocomplete').html(
 	                            $('.autocomplete').html() + 
-	                            '<a href="profile.php?username='+r[i].username+'#'+r[i].id+'"><li class="list-group-item"><span>'+r[i].body+'</span></li></a>'
+	                            '<a href="profile.php?username='+r[i].username+'#'+r[i].id+'"><div class="lolzsearch"><div class="searchtext"><span>'+r[i].body+'</span></div></div></a>'
 	                        )
-	                    }		
+	                    }
                     },
                     error: function(r){
                         console.log(r)
@@ -336,14 +336,42 @@ if(isset($_GET['username'])){
 	                })
 	                ///////NEW POST OPENS ONLY FOR LOGGED IN SELF USER//////////////
 			        if(r == '<?php echo $username; ?>'){
-				        $('.newpost').html(
-					        $('.newpost').html() +
-					            '<button class="btn btn-primary" type="button" style="margin-bottom:10px;display:block;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%;" onclick="showNewPostModal()">New post</button>'
-				        )
+				        //$('.newpost').html(
+					        //$('.newpost').html() +
+					            //'<button class="btn btn-primary" type="button" style="margin-bottom:10px;display:block;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%;" onclick="showNewPostModal()">New post</button>'
+				        //)
 				        $('.composepost').html(
 				        	$('.composepost').html() + 
-				        		'<div style="margin-bottom:10px;"><div class="postheader"><textarea id="postinput" class="postinput" rows="1" data-min-rows="1" style="padding-bottom:10px;" placeholder="What u wanna say? XD"></textarea></div><button class="uploadbutton" type="button"><img src="assets/img/image.png" class="icon"><div class="buttontext">Upload pic</div></button><button class="postbutton" type="button"><img src="assets/img/post.png" class="icon"><div class="buttontext">Post</div></button></div>'
+				        		'<div style="margin-bottom:10px;"><div class="postheader"><textarea id="postinput" class="postinput" rows="1" data-min-rows="1" style="padding-bottom:10px;" placeholder="What u wanna say? XD"></textarea></div><div class="picfile"></div><input type="file" id="my_file" style="display:none;"><button class="uploadbutton" type="button" id="filedisplay"><img src="assets/img/image.png" class="icon"><div class="buttontext2">Upload pic</div></button><button class="postbutton" post-id="1" type="button"><img src="assets/img/post.png" class="icon"><div class="buttontext">Post</div></button></div>'
 				        )
+				        document.getElementById('filedisplay').onclick = function() {
+						    document.getElementById('my_file').click(); 
+						};
+						$('#my_file').change(function(){
+							var filename = document.getElementById('my_file').value;
+							var filename = filename.replace(/^.*[\\\/]/, '');
+							$('.picfile').html('<div class="fileback"><button class="reportdelete" style="margin-right:5px;" delete-pic="0"><img src="assets/img/delete.png" class="icon2"></button>'+filename+'</div>')
+							$('[delete-pic]').click(function(){
+								document.getElementById('my_file').value = '';
+								$('.picfile').html('')
+							})
+						})
+
+				        //////////////compose post/////////////////////
+						$('[post-id]').click(function(){
+							$.ajax({
+				                type: "POST",
+				                url: "api/post?body="+ $('.postinput').val(),
+				                processData: false,
+				                contentType: "application/json",
+				                data: '',
+				                success: function(r) {
+				                	console.log('r')
+				                	window.open("profile.php?username=<?php echo $username; ?>", "_self");
+				                }
+							})
+						})
+						////////////////////////////////////////
     					$(document)
 						    .one('focus.postinput', 'textarea.postinput', function(){
 						        var savedValue = document.getElementById('postinput').value;
@@ -382,7 +410,6 @@ if(isset($_GET['username'])){
 						       												
 						        $('[follow-id]').click(function(){
 						        	var followid = $(this).attr('follow-id');
-						        	
 								    $.ajax({
 						                type: "POST",
 						                url: "api/follow?username=<?php echo $username; ?>",
@@ -432,7 +459,6 @@ if(isset($_GET['username'])){
 
 	            }
 	        })
-			
 
             $.ajax({
                 type: "GET",
@@ -444,7 +470,6 @@ if(isset($_GET['username'])){
                     var posts = JSON.parse(r)
                     
                     $.each(posts, function(index){
-
                     	if(posts[index].PostImage == ""){
 	                        $('.timelineposts').html(
 	                            $('.timelineposts').html() + 

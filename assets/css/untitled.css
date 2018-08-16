@@ -257,6 +257,13 @@
 	font-size: 14px;
 	font-weight: 500;
 }
+.buttontext2{
+	padding-top:5px;
+	padding-bottom: 5px;
+	display:inline-block;
+	font-size: 14px;
+	font-weight: 500;
+}
 .buttonnumber{
 	color:rgb(0, 127, 255);
 	display:inline-block;
@@ -277,6 +284,35 @@
 
 .reportdelete:hover{
 	background-color: #d9e4ec;
+}
+.lolzsearch{
+	display:block;
+	background-color:rgb(255,255,255);
+	border:1px solid #d9e4ec;
+	border-radius: 4px;
+	width:100%;
+	padding:10px;
+}
+.lolzsearch:hover{
+	background-color: #d9e4ec;
+}
+.searchtext{
+	font-weight:500;
+	font-size:16px;
+	color:rgb(33,37,41);
+}
+.fileback{
+	display: block;
+	font-weight:500;
+	color:rgb(33,37,41);
+
+	background-color:rgb(255,255,255);
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+
+	border-left:1px solid #d9e4ec;
+	border-right:1px solid #d9e4ec;
 }
 
 input[type="text"], textarea {
