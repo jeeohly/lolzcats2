@@ -342,36 +342,25 @@ if(isset($_GET['username'])){
 				        //)
 				        $('.composepost').html(
 				        	$('.composepost').html() + 
-				        		'<div style="margin-bottom:10px;"><div class="postheader"><textarea id="postinput" class="postinput" rows="1" data-min-rows="1" style="padding-bottom:10px;" placeholder="What u wanna say? XD"></textarea></div><div class="picfile"></div><input type="file" id="my_file" style="display:none;"><button class="uploadbutton" type="button" id="filedisplay"><img src="assets/img/image.png" class="icon"><div class="buttontext2">Upload pic</div></button><button class="postbutton" post-id="1" type="button"><img src="assets/img/post.png" class="icon"><div class="buttontext">Post</div></button></div>'
+				        		'<div style="margin-bottom:10px;"><div class="postheader"><textarea id="postinput" class="postinput" rows="1" data-min-rows="1" style="padding-bottom:10px;" placeholder="What u wanna say? XD"></textarea></div><div class="picfile"></div><input type="file" id="my_file" style="display:none;" class="my_file" name="my_file"><button class="uploadbutton" type="button" id="filedisplay"><img src="assets/img/image.png" class="icon"><div class="buttontext2">Upload pic</div></button><button class="postbutton" post-id="1" type="button"><img src="assets/img/post.png" class="icon"><div class="buttontext">Post</div></button></div>'
 				        )
 				        document.getElementById('filedisplay').onclick = function() {
 						    document.getElementById('my_file').click(); 
 						};
+						//////FILE DISPLAY///////////
 						$('#my_file').change(function(){
 							var filename = document.getElementById('my_file').value;
 							var filename = filename.replace(/^.*[\\\/]/, '');
-							$('.picfile').html('<div class="fileback"><button class="reportdelete" style="margin-right:5px;" delete-pic="0"><img src="assets/img/delete.png" class="icon2"></button>'+filename+'</div>')
+							$('.picfile').html('<div class="fileback"><button class="reportdelete" style="margin-right:5px;" delete-pic="0"><img src="assets/img/x.png" class="icon3"></button>'+filename+'</div>')
+
 							$('[delete-pic]').click(function(){
 								document.getElementById('my_file').value = '';
 								$('.picfile').html('')
+								console.log($('.my_file').val());
 							})
+							console.log($('.my_file').val());
 						})
-
-				        //////////////compose post/////////////////////
-						$('[post-id]').click(function(){
-							$.ajax({
-				                type: "POST",
-				                url: "api/post?body="+ $('.postinput').val(),
-				                processData: false,
-				                contentType: "application/json",
-				                data: '',
-				                success: function(r) {
-				                	console.log('r')
-				                	window.open("profile.php?username=<?php echo $username; ?>", "_self");
-				                }
-							})
-						})
-						////////////////////////////////////////
+						/////////////////////////
     					$(document)
 						    .one('focus.postinput', 'textarea.postinput', function(){
 						        var savedValue = document.getElementById('postinput').value;
@@ -385,6 +374,22 @@ if(isset($_GET['username'])){
 						        rows = Math.ceil((document.getElementById('postinput').scrollHeight - document.getElementById('postinput').baseScrollHeight) / 24);
 						        document.getElementById('postinput').rows = minRows + rows;
 					    	});	
+					  	//////////////compose post/////////////////////
+						$('[post-id]').click(function(){
+							var body = $('.postinput').val()
+							body = body.replace(/(["])/g, "\\\"")
+							body = body.replace(/(['])/g, "\'")
+							$.ajax({
+				                type: "POST",
+				                url: "api/post?body="+ body,
+				                processData: false,
+				                contentType: "application/json",
+				                data: '',
+				                success: function(r) {
+				                	window.open("profile.php?username=<?php echo $username; ?>", "_self");
+				                }
+							})
+						})
 				    ////////////following stuff///////////////////
 			        }else{
 			        	$.ajax({

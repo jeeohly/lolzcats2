@@ -249,6 +249,9 @@
 }.icon2{
 	width:25px;
 	margin-bottom: 2px;
+}.icon3{
+	width:15px;
+	margin-bottom: 4px;
 }
 .buttontext{
 	padding-top:5px;
@@ -283,7 +286,7 @@
 }
 
 .reportdelete:hover{
-	background-color: #d9e4ec;
+	background-color: #d9e4ec
 }
 .lolzsearch{
 	display:block;

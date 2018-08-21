@@ -377,9 +377,16 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         //postid = post2::createImgPost($_POST['postbody'], login2::isLoggedIn(), $userid);
                         //Image::uploadImage('postimg', "UPDATE posts SET postimg=:postimg WHERE id=:postid", array(':postid'=>$postid));
                 //}
+                $body = $_GET['body'];
                 $userid = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($_COOKIE['LOLID'])))[0]['user_id'];
-                $db->query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0, \'\', \'\')', array(':postbody'=>$_GET['body'], ':userid'=>$userid));
+                if(strlen($body) <= 160){
+                        if (strlen($body) >= 1) {
+                                $db->query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0, \'\', \'\')', array(':postbody'=>$body, ':userid'=>$userid));
+                        }
+                }
+ 
         }
+
         ////////////////////////////
 }  else if ($_SERVER['REQUEST_METHOD'] == "DELETE") {
         if ($_GET['url'] == "auth") {

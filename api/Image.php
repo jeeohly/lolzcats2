@@ -1,4 +1,6 @@
 <?php
+require_once("DB.php");
+$db = new DB("127.0.0.1", "lolzcatz", "root", "");
 class Image{
 
 	public static function uploadImage($formname, $query, $params){
@@ -26,7 +28,7 @@ class Image{
 
 		$params = $preparams + $params;
 
-		DB::query($query, $params);
+		$db->query($query, $params);
 	}
 
 }
