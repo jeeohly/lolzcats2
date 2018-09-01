@@ -412,7 +412,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         $deletereport = "delete";
                 }
                 ////////////////////////////PROF PIC////////////////
-                $profpic = $db->query('SELECT profileimg FROM users WHERE id=:userid', array(':userid'=>$post['user_id']))[0]['profileimg'];
+                $profpic = $db->query('SELECT profileimg FROM users WHERE id=:userid', array(':userid'=>$likerId))[0]['profileimg'];
                 ///////////////////////////////////////////////////
                 $commentcount = sizeof($db->query('SELECT comments.comment, users.username FROM comments, users WHERE post_id=:postid AND comments.user_id=users.id', array(':postid'=>$post['id'])));
 
@@ -423,7 +423,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                         $response .= '"PostDate": "'.$post['posted_at'].'",';
                         $response .= '"PostImage": "'.$post['postimg'].'",';
                         $response .= '"isLiked": "'.$isliked.'",';
-                        $response .= '"Profpic": "'.$profpic.'",';
+                        $response .= '"Profpic": "'.$userpic.'",';
                         $response .= '"Deletereport": "'.$deletereport.'",';
                         $response .= '"Userpic": "'.$userpic.'",';
                         $response .= '"commentcount": '.$commentcount.',';

@@ -22,7 +22,7 @@
 }
 
 .postprofile{
-	opacity: 0;
+	opacity: 1;
 	transition: all 2s ease-out;
 	border:1px solid #d9e4ec;
 	border-radius: 50%;

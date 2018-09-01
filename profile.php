@@ -319,32 +319,33 @@ if(isset($_GET['username'])){
 						        rows = Math.ceil((document.getElementById('postinput').scrollHeight - document.getElementById('postinput').baseScrollHeight) / 24);
 						        document.getElementById('postinput').rows = minRows + rows;
 					    	});
-				         //////////////compose post/////////////////////
-							$('[post-id]').click(function(){
-								var body = $('.postinput').val()
-								body = body.replace(/(["])/g, "\\\"")
-								body = body.replace(/(['])/g, "\'")
-								body = body.replace(/\\/g, "\\\\")
-								var img = $('.my_file').val()
-								img = img.replace(/\\/g, "\\\\")
-								$.ajax({
-					                type: "POST",
-					                url: "api/post?body="+ img + " " + body,
-					                processData: false,
-					                contentType: "application/json",
-					                data: '',
-					                success: function(r) {
-					                	console.log(r);
-					                	var posts = JSON.parse(r)
-					                	//window.open("profile.php?username=<?php echo $username; ?>", "_self");
+					         //////////////compose post/////////////////////
+						$('[post-id]').click(function(){
+							var body = $('.postinput').val()
+							body = body.replace(/(["])/g, "\\\"")
+							body = body.replace(/(['])/g, "\'")
+							body = body.replace(/\\/g, "\\\\")
+							var img = $('.my_file').val()
+							img = img.replace(/\\/g, "\\\\")
+							$.ajax({
+				                type: "POST",
+				                url: "api/post?body="+ img + " " + body,
+				                processData: false,
+				                contentType: "application/json",
+				                data: '',
+				                success: function(r) {
+				                	console.log(r);
+				                	var posts2 = JSON.parse(r)
+				                	//window.open("profile.php?username=<?php echo $username; ?>", "_self");
 
-					                	$('.newtimelineposts').html(
-		                            		$('.newtimelineposts').html() + '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts.PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts.Profpic+'" class="postprofile" id="img'+posts.postId+'">'+posts.PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts.PostDate+'</p><span style="float:right;margin-top:5px;"><button class="reportdelete" delete-id="'+posts.PostId+'"><img src="assets/img/'+posts.Deletereport+'.png" class="icon2"></button></span></div><div class="postbody"><p class="mb-0">'+posts.PostBody+'</p></div><div class="postfooter"><button class="likebutton" type="button" data-id="'+posts.PostId+'"><img src="assets/img/thumbs.png" class="icon"><div class="buttonnumber">'+posts.Likes+'</div><div class="buttontext">'+posts.isLiked+'</div></button><button class="commentbutton" data-postid="'+posts.PostId+'" type="button"><img src="assets/img/comment2.png" class="icon"><div class="buttonnumber">'+posts.commentcount+'</div><div class="buttontext"> Comment</div></button></div><div class="commentbox" comment-id="'+posts.PostId+'"><img src="'+posts.Userpic+'" class="userpic"><div class="commentbubble"><textarea class="commentinput" id="'+posts.PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
-		                            		)
+				                	$('.newtimelineposts').html(
+	                            		$('.newtimelineposts').html() + '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts2.PostedBy+'" style="font-weight:500;"><img src="'+posts2.Profpic+'" data-tempsrc="'+posts2.Profpic+'" class="postprofile" id="img'+posts2.postId+'">'+posts2.PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts2.PostDate+'</p><span style="float:right;margin-top:5px;"><button class="reportdelete" delete-id="'+posts2.PostId+'"><img src="assets/img/'+posts2.Deletereport+'.png" class="icon2"></button></span></div><div class="postbody"><p class="mb-0">'+posts2.PostBody+'</p></div><div class="postfooter"><button class="likebutton" type="button" data-id="'+posts2.PostId+'"><img src="assets/img/thumbs.png" class="icon"><div class="buttonnumber">'+posts2.Likes+'</div><div class="buttontext">'+posts2.isLiked+'</div></button><button class="commentbutton" data-postid="'+posts2.PostId+'" type="button"><img src="assets/img/comment2.png" class="icon"><div class="buttonnumber">'+posts2.commentcount+'</div><div class="buttontext"> Comment</div></button></div><div class="commentbox" comment-id="'+posts2.PostId+'"><img src="'+posts2.Userpic+'" class="userpic"><div class="commentbubble"><textarea class="commentinput" id="'+posts2.PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
+	                            		)
 
-					                }
-								})
-							})	
+				                }
+
+							})
+						})	
 					
 				    ////////////following stuff///////////////////
 			        }else{
@@ -482,10 +483,10 @@ if(isset($_GET['username'])){
                          document.getElementById(buttonid).focus();
                      });
                      $('[id]').keypress(function(event) {
-							if (event.keyCode == 13) {
-							    event.preventDefault();
-							}
-						});
+								if (event.keyCode == 13) {
+								    event.preventDefault();
+								}
+							});
 
                         $('[data-id]').click(function(){
                             var buttonid = $(this).attr('data-id');
