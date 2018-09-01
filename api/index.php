@@ -370,20 +370,68 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
                 echo $isFollowing;
                 echo "}";
         } else if ($_GET['url'] == "post"){
-
-                //if($_FILES['postimg']['size'] == 0){
-                        //post2::createPost($_GET['body'], login2::isLoggedIn(), $userid);
-                //}else{
-                        //postid = post2::createImgPost($_POST['postbody'], login2::isLoggedIn(), $userid);
-                        //Image::uploadImage('postimg', "UPDATE posts SET postimg=:postimg WHERE id=:postid", array(':postid'=>$postid));
-                //}
-                $body = $_GET['body'];
+                $thesplit = explode(' ',$_GET['body'], 2);
+                $body = (string)$thesplit[1];
+                $img = (string)$thesplit[0];
+                $postid = "";
                 $userid = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($_COOKIE['LOLID'])))[0]['user_id'];
+
                 if(strlen($body) <= 160){
-                        if (strlen($body) >= 1) {
+                        if (strlen($body) >= 1 && strlen($img) == "") {
                                 $db->query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0, \'\', \'\')', array(':postbody'=>$body, ':userid'=>$userid));
+                        }else if (strlen($img) != ""){
+                                $postid = post2::createImgPost($body, $userid);
+                                Image::uploadImage($img, "UPDATE posts SET postimg=:postimg WHERE id=:postid", array(':postid'=>$postid));
                         }
                 }
+
+                //////////////////////////////////////////////////////
+                $post = $db->query('SELECT posts.user_id, posts.id, posts.body, posts.posted_at, posts.postimg, posts.likes, users.`username` FROM users, posts
+                WHERE users.id = posts.user_id
+                AND users.id = :userid
+                ORDER BY posts.posted_at DESC;', array(':userid'=>$userid))[0];
+                ///////////////
+                $isliked = " Unlike";
+                $token = $_COOKIE['LOLID'];
+                $likerId = $db->query('SELECT user_id FROM login_tokens WHERE token=:token', array(':token'=>sha1($token)))[0]['user_id'];
+
+                $userpic = $db->query('SELECT profileimg FROM users WHERE id=:userid', array(':userid'=>$likerId))[0]['profileimg'];
+                //////////////////////////////
+                $profpic = "";
+                $deletereport = "report";
+                $commentcount = "";
+
+                /////////STUFF TO GET UNLIKE DISPLAY//////////////////
+                $postId = $post['id'];
+                if (!$db->query('SELECT user_id FROM post_likes WHERE post_id=:postid AND user_id=:userid', array(':postid'=>$postId, ':userid'=>$likerId))) {
+                        $isliked = " Like";
+                }else{
+                        $isliked = " Unlike";
+                }
+                if($db->query('SELECT user_id FROM posts WHERE id=:postid AND user_id=:userid', array(':postid'=>$postId, ':userid'=>$likerId))){
+                        $deletereport = "delete";
+                }
+                ////////////////////////////PROF PIC////////////////
+                $profpic = $db->query('SELECT profileimg FROM users WHERE id=:userid', array(':userid'=>$post['user_id']))[0]['profileimg'];
+                ///////////////////////////////////////////////////
+                $commentcount = sizeof($db->query('SELECT comments.comment, users.username FROM comments, users WHERE post_id=:postid AND comments.user_id=users.id', array(':postid'=>$post['id'])));
+
+                $response = "{";
+                        $response .= '"PostId": '.$post['id'].',';
+                        $response .= '"PostBody": "'.$post['body'].'",';
+                        $response .= '"PostedBy": "'.$post['username'].'",';
+                        $response .= '"PostDate": "'.$post['posted_at'].'",';
+                        $response .= '"PostImage": "'.$post['postimg'].'",';
+                        $response .= '"isLiked": "'.$isliked.'",';
+                        $response .= '"Profpic": "'.$profpic.'",';
+                        $response .= '"Deletereport": "'.$deletereport.'",';
+                        $response .= '"Userpic": "'.$userpic.'",';
+                        $response .= '"commentcount": '.$commentcount.',';
+                        $response .= '"Likes": '.$post['likes'].'';
+                $response .= "}";
+                
+                http_response_code(200);
+                echo $response;
  
         }
 

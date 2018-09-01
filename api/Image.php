@@ -1,9 +1,10 @@
 <?php
 require_once("DB.php");
-$db = new DB("127.0.0.1", "lolzcatz", "root", "");
 class Image{
 
 	public static function uploadImage($formname, $query, $params){
+		$db = new DB("127.0.0.1", "lolzcatz", "root", "");
+
 		$image = base64_encode(file_get_contents($_FILES[$formname]['tmp_name']));
 
 		$options = array('http'=>array(

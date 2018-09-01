@@ -21,53 +21,14 @@ if(isset($_GET['username'])){
 
 		$profimg = DB::query('SELECT profileimg FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['profileimg'];
 
-		if(isset($_POST['follow'])){
-
-			if($userid != $followerid){
-	
-				if(!DB::query('SELECT follower_id from followers WHERE user_id=:userid AND follower_id=:followerid', array('userid'=>$userid, ':followerid'=>$followerid))){
-
-					if($followerid == 13){
-						DB::query('UPDATE users SET verified=1 WHERE id=:userid', array(':userid'=>$userid));
-					}
-
-					DB::query('INSERT INTO followers VALUES (\'\', :userid, :followerid)', array('userid'=>$userid, ':followerid'=>$followerid));
-				}else{
-					echo 'Already following';
-				}
-				$isFollowing = True;
-			}
-		}
-
-		if(isset($_POST['unfollow'])){
-
-			if($userid != $followerid){
-				if(DB::query('SELECT follower_id from followers WHERE user_id=:userid AND follower_id=:followerid', array('userid'=>$userid, ':followerid'=>$followerid))){
-
-					if($followerid == 13){
-						DB::query('UPDATE users SET verified=0 WHERE id=:userid', array(':userid'=>$userid));
-					}
-
-					DB::query('DELETE FROM followers WHERE user_id=:userid AND follower_id=:followerid', array('userid'=>$userid, ':followerid'=>$followerid));
-				}
-				$isFollowing = False;
-			}
-		}
-
 		if(DB::query('SELECT follower_id from followers WHERE user_id=:userid', array(':userid'=>$userid))){
 			//echo 'Already following';
 			$isFollowing = True;
 		}
-		//////////deleting posts
-		if(isset($_POST['deletepost'])){
-			if (DB::query('SELECT id FROM posts WHERE id=:postid AND user_id=:userid', array(':postid'=>$_GET['postid'], ':userid'=>$followerid))) {
-                DB::query('DELETE FROM posts WHERE id=:postid and user_id=:userid', array(':postid'=>$_GET['postid'], ':userid'=>$followerid));
-                DB::query('DELETE FROM post_likes WHERE post_id=:postid', array(':postid'=>$_GET['postid']));
-                echo 'Post deleted';
-            }
-		}
-
-		//////////postimg///////////////
+	}else{
+		die('User not found');
+	}
+	//////////postimg///////////////
 		if(isset($_POST['post'])){
 			if($_FILES['postimg']['size'] == 0){
 				post2::createPost($_POST['postbody'], login2::isLoggedIn(), $userid);
@@ -76,27 +37,8 @@ if(isset($_GET['username'])){
                 Image::uploadImage('postimg', "UPDATE posts SET postimg=:postimg WHERE id=:postid", array(':postid'=>$postid));
 			}
 		}
-		///////////////likes//////////
-		if(isset($_GET['postid']) && !isset($_POST['deletepost'])){
-			post2::likePost($_GET['postid'], $followerid);
-		}
-
-		$posts = post2::displayPosts($userid, $username, $followerid);
-		///////////////////////////////
-	}else{
-		die('User not found');
-	}
 }
 ?>
-
-<!--<form action="profile.php?username=<?php echo $username; ?>" method="post" enctype="multipart/form-data">
-	<textarea name="postbody" rows="8" cols="80"></textarea>
-	<br />Upload an image:
-	<input type="file" name="postimg">
-	<input type="submit" name="post" value="post">
-</form>-->
-
-<!---------------------->
 
 <!DOCTYPE html>
 <html style="background-color:rgb(245,246,250);">
@@ -187,6 +129,9 @@ if(isset($_GET['username'])){
    					<div class="col-xl-6">
    						<div class="composepost">
    						</div>
+   						<div class="newtimelineposts">
+   						<!-----------posts--------->
+                        </div>
    						<div class="timelineposts">
    						<!-----------posts--------->
                         </div>
@@ -336,13 +281,13 @@ if(isset($_GET['username'])){
 	                })
 	                ///////NEW POST OPENS ONLY FOR LOGGED IN SELF USER//////////////
 			        if(r == '<?php echo $username; ?>'){
-				        //$('.newpost').html(
-					        //$('.newpost').html() +
-					            //'<button class="btn btn-primary" type="button" style="margin-bottom:10px;display:block;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%;" onclick="showNewPostModal()">New post</button>'
-				        //)
+				        $('.newpost').html(
+					        $('.newpost').html() +
+					            '<button class="btn btn-primary" type="button" style="margin-bottom:10px;display:block;background-color:#ffffff;color:rgb(33,37,41); padding:5px;width:100%;" onclick="showNewPostModal()">New post</button>'
+				        )
 				        $('.composepost').html(
 				        	$('.composepost').html() + 
-				        		'<div style="margin-bottom:10px;"><div class="postheader"><textarea id="postinput" class="postinput" rows="1" data-min-rows="1" style="padding-bottom:10px;" placeholder="What u wanna say? XD"></textarea></div><div class="picfile"></div><input type="file" id="my_file" style="display:none;" class="my_file" name="my_file"><button class="uploadbutton" type="button" id="filedisplay"><img src="assets/img/image.png" class="icon"><div class="buttontext2">Upload pic</div></button><button class="postbutton" post-id="1" type="button"><img src="assets/img/post.png" class="icon"><div class="buttontext">Post</div></button></div>'
+				        		'<div style="margin-bottom:10px;"><div class="postheader"><textarea name="lolzpostinput" id="postinput" class="postinput" rows="1" data-min-rows="1" style="padding-bottom:10px;" placeholder="What u wanna say? XD"></textarea></div><div class="picfile"></div><input type="file" id="my_file" style="display:none;" class="my_file" name="my_file"><button class="uploadbutton" type="submit" id="filedisplay"><img src="assets/img/image.png" class="icon"><div class="buttontext2">Upload pic</div></button><button name="postbutton" class="postbutton" post-id="1" type="button"><img src="assets/img/post.png" class="icon"><div class="buttontext">Post</div></button></div>'
 				        )
 				        document.getElementById('filedisplay').onclick = function() {
 						    document.getElementById('my_file').click(); 
@@ -373,23 +318,34 @@ if(isset($_GET['username'])){
 						        document.getElementById('postinput').rows = minRows;
 						        rows = Math.ceil((document.getElementById('postinput').scrollHeight - document.getElementById('postinput').baseScrollHeight) / 24);
 						        document.getElementById('postinput').rows = minRows + rows;
-					    	});	
-					  	//////////////compose post/////////////////////
-						$('[post-id]').click(function(){
-							var body = $('.postinput').val()
-							body = body.replace(/(["])/g, "\\\"")
-							body = body.replace(/(['])/g, "\'")
-							$.ajax({
-				                type: "POST",
-				                url: "api/post?body="+ body,
-				                processData: false,
-				                contentType: "application/json",
-				                data: '',
-				                success: function(r) {
-				                	window.open("profile.php?username=<?php echo $username; ?>", "_self");
-				                }
-							})
-						})
+					    	});
+				         //////////////compose post/////////////////////
+							$('[post-id]').click(function(){
+								var body = $('.postinput').val()
+								body = body.replace(/(["])/g, "\\\"")
+								body = body.replace(/(['])/g, "\'")
+								body = body.replace(/\\/g, "\\\\")
+								var img = $('.my_file').val()
+								img = img.replace(/\\/g, "\\\\")
+								$.ajax({
+					                type: "POST",
+					                url: "api/post?body="+ img + " " + body,
+					                processData: false,
+					                contentType: "application/json",
+					                data: '',
+					                success: function(r) {
+					                	console.log(r);
+					                	var posts = JSON.parse(r)
+					                	//window.open("profile.php?username=<?php echo $username; ?>", "_self");
+
+					                	$('.newtimelineposts').html(
+		                            		$('.newtimelineposts').html() + '<div style="margin-bottom:10px;"><div class="postheader"><p class="mb-0" style="width:70%;display:inline-block;"><a href="profile.php?username='+posts.PostedBy+'" style="font-weight:500;"><img src="" data-tempsrc="'+posts.Profpic+'" class="postprofile" id="img'+posts.postId+'">'+posts.PostedBy+'</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+posts.PostDate+'</p><span style="float:right;margin-top:5px;"><button class="reportdelete" delete-id="'+posts.PostId+'"><img src="assets/img/'+posts.Deletereport+'.png" class="icon2"></button></span></div><div class="postbody"><p class="mb-0">'+posts.PostBody+'</p></div><div class="postfooter"><button class="likebutton" type="button" data-id="'+posts.PostId+'"><img src="assets/img/thumbs.png" class="icon"><div class="buttonnumber">'+posts.Likes+'</div><div class="buttontext">'+posts.isLiked+'</div></button><button class="commentbutton" data-postid="'+posts.PostId+'" type="button"><img src="assets/img/comment2.png" class="icon"><div class="buttonnumber">'+posts.commentcount+'</div><div class="buttontext"> Comment</div></button></div><div class="commentbox" comment-id="'+posts.PostId+'"><img src="'+posts.Userpic+'" class="userpic"><div class="commentbubble"><textarea class="commentinput" id="'+posts.PostId+'" rows="1" data-min-rows="1"  placeholder="comment..."></textarea></div></div></div>'
+		                            		)
+
+					                }
+								})
+							})	
+					
 				    ////////////following stuff///////////////////
 			        }else{
 			        	$.ajax({
@@ -521,16 +477,15 @@ if(isset($_GET['username'])){
 						        document.getElementById(posts[index].PostId).rows = minRows + rows;
 					    	});		
 					    /////////////////COMMENT INPUT//////////////////
-                        $('[data-postid]').click(function(){
-                            var buttonid = $(this).attr('data-postid');
-                            document.getElementById(buttonid).focus();
-                        });
-                        $('[id]').keypress(function(event) {
+                     $('[data-postid]').click(function(){
+                         var buttonid = $(this).attr('data-postid');
+                         document.getElementById(buttonid).focus();
+                     });
+                     $('[id]').keypress(function(event) {
 							if (event.keyCode == 13) {
 							    event.preventDefault();
 							}
 						});
-                        ///////////////////////////////
 
                         $('[data-id]').click(function(){
                             var buttonid = $(this).attr('data-id');
