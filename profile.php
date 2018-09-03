@@ -121,7 +121,7 @@ if(isset($_GET['username'])){
 	   				</div>
 
 
-    				<div class="lolzbox"><div class="subheader">About me</div><p class="mb-0">i like to go skii. last winter i went to aspen and it was gnarly! XD Anchorage, Ak resident</p></div>
+    				<div class="lolzbox"><div class="subheader">About me</div><p class="mb-0">about me about me about me about me about me about me about me about me</p></div>
 
     			</div>
 
