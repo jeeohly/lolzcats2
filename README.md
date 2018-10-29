@@ -27,7 +27,7 @@ The classes folder has been deprecated and all of the API's for database access 
 ## create-account.html
 * welcome email is sent to user
 * password is encrypted using MD5 hash generator 
-_
+</ br> 
 ![alt text](https://i.imgur.com/YozT9g2.png)
 ## my-account.php
 * able to change user's profile picture in the database 
@@ -40,7 +40,7 @@ _
 ## databse info
 * used xampp server
 * SQL tables for comments, followers, login_tokens, messages, notifications, password_tokents, posts, post_likes, and users
-_
+</ br> 
 ![alt text](https://i.imgur.com/i5myKyh.png)
 
 
