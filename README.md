@@ -20,9 +20,8 @@ The classes folder has been deprecated and all of the API's for database access 
 * post delete button
 #### Your account page
 ![alt text](https://i.imgur.com/GKnHBi0.png)
-## Friend's page 
+#### Friend's page 
 ![alt text](https://i.imgur.com/pB0YQs0.png)
-
 ## login.html
 * login tokens expires in 7 days 
 ## create-account.html
@@ -30,14 +29,12 @@ The classes folder has been deprecated and all of the API's for database access 
 * password is encrypted using MD5 hash generator 
 _
 ![alt text](https://i.imgur.com/YozT9g2.png)
-
 ## my-account.php
 * able to change user's profile picture in the database 
 ## index.html
 * posts of user's followings 
 #### Timeline page 
 ![alt text](https://i.imgur.com/vKedUIV.png)
-
 ## forgot-password.html 
 * ability to change password in the database 
 ## databse info
