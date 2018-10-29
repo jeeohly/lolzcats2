@@ -6,11 +6,11 @@ A social network site utilizing PHP, PDO queries, sql tables, Cloudflare's ajax 
 
 The classes folder has been deprecated and all of the API's for database access is now found under api/index.php. All displayed functions in the readme are currently operational besides commenting, messaging, and user searching. The operational pages are the following: 
 
-#profile.php
-#login.html
-#create-account.html
-#my-account.php, index.html
-#forgot-password.html. 
+# profile.php
+# login.html
+# create-account.html
+# my-account.php, index.html
+# forgot-password.html. 
 
 ## Your account page
 ![alt text](https://i.imgur.com/GKnHBi0.png)
