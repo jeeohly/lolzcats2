@@ -11,13 +11,13 @@ The classes folder has been deprecated and all of the API's for database access 
 -links all pages together
 -search box for all posts (but will make this possible for all users as well)
 ## profile.php
--A functional follow/unfollow button<br />
--A posting box<br />
-  -image upload button (that uploads to Imgur)<br />
--a list of posts in most recent first order<br />
-  -posts with like/unlike button<br />
-  -comment box<br /> 
--post delete button<br /> 
+* A functional follow/unfollow button<br />
+* A posting box<br />
+  * image upload button (that uploads to Imgur)<br />
+* a list of posts in most recent first order<br />
+  * posts with like/unlike button<br />
+  * comment box<br /> 
+* post delete button<br /> 
 ## login.html
 -login tokens expires in 7 days 
 ## create-account.html
