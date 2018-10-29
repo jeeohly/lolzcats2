@@ -1,10 +1,10 @@
-# lolzcats2
+# lolzcatz
 
 Summer 2018 Project 
 
 A social network site utilizing Bootstrap, PHP, PDO queries, sql tables, Cloudflare's ajax requests, javascript, phpmailer, and Imgur's image uploading API. 
 
-**Update
+#### Update
 The classes folder has been deprecated and all of the API's for database access is now found under api/index.php. All displayed functions in the readme are currently operational besides notifications, commenting, messaging, and user searching. The operational pages are the following: 
 
 ## navbar
