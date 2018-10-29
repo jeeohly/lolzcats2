@@ -26,7 +26,7 @@ The classes folder has been deprecated and all of the API's for database access 
 ## my-account.php
 * able to change user's profile picture in the database 
 ## index.html
-* list of posts of user's followings 
+* posts of user's followings 
 ## forgot-password.html 
 * ability to change password in the database 
 ## databse info
